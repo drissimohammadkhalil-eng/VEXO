@@ -4,83 +4,100 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VEXO Store</title>
-
-<style>
-
-body{
-font-family: Arial;
-margin:0;
-background:#f4f4f4;
-text-align:center;
-}
-
-header{
-background:black;
-color:white;
-padding:20px;
-font-size:24px;
-}
-
-.products{
-display:flex;
-justify-content:center;
-gap:20px;
-margin-top:40px;
-}
-
-.product{
-background:white;
-padding:20px;
-border-radius:10px;
-width:200px;
-box-shadow:0 0 10px rgba(0,0,0,0.1);
-}
-
-button{
-background:black;
-color:white;
-border:none;
-padding:10px 20px;
-cursor:pointer;
-border-radius:5px;
-}
-
-button:hover{
-background:#444;
-}
-
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<header>
-VEXO STORE
-</header>
+<header>VEXO STORE</header>
 
-<h2>المنتجات</h2>
+<section class="hero">
+<h1>أفضل المنتجات بأفضل الأسعار</h1>
+<p>متجر VEXO يقدم لك منتجات مميزة</p>
+<button onclick="scrollToProducts()">تسوق الآن</button>
+</section>
 
-<div class="products">
+<div class="cart">
+<h3>🛒 سلة المشتريات</h3>
+<div id="cart-items"></div>
+<p>إجمالي المنتجات: <span id="cart-count">0</span></p>
+<button onclick="checkout()">شراء الآن</button>
+</div>
+
+<h2 style="text-align:center;">منتجاتنا</h2>
+
+<div class="products" id="products">
 
 <div class="product">
+<img src="https://via.placeholder.com/200x150.png?text=Smart+Watch" alt="ساعة ذكية">
 <h3>ساعة ذكية</h3>
 <p>السعر: 40$</p>
-<button>شراء</button>
+<button onclick="addToCart(this)">أضف للسلة</button>
 </div>
 
 <div class="product">
+<img src="https://via.placeholder.com/200x150.png?text=Headphones" alt="سماعات">
 <h3>سماعات</h3>
 <p>السعر: 25$</p>
-<button>شراء</button>
+<button onclick="addToCart(this)">أضف للسلة</button>
 </div>
 
 <div class="product">
+<img src="https://via.placeholder.com/200x150.png?text=Bag" alt="حقيبة">
 <h3>حقيبة</h3>
 <p>السعر: 30$</p>
-<button>شراء</button>
+<button onclick="addToCart(this)">أضف للسلة</button>
 </div>
 
 </div>
+
+<script>
+let cart = [];
+
+function addToCart(btn){
+    const product = btn.parentElement;
+    const name = product.querySelector("h3").innerText;
+    const price = product.querySelector("p").innerText;
+    cart.push({name, price});
+    updateCart();
+}
+
+function updateCart(){
+    const cartItems = document.getElementById("cart-items");
+    cartItems.innerHTML = "";
+    cart.forEach((item,index)=>{
+        cartItems.innerHTML += `${item.name} - ${item.price} <button onclick="removeItem(${index})">❌</button><br>`;
+    });
+    document.getElementById("cart-count").innerText = cart.length;
+}
+
+function removeItem(index){
+    cart.splice(index,1);
+    updateCart();
+}
+
+function toggleCart(){
+    const itemsDiv = document.getElementById("cart-items");
+    itemsDiv.style.display = itemsDiv.style.display === "none" ? "block" : "none";
+}
+
+function scrollToProducts(){
+    document.getElementById("products").scrollIntoView({behavior:"smooth"});
+}
+
+function checkout(){
+    if(cart.length===0){
+        alert("السلة فارغة!");
+        return;
+    }
+    let message = "أريد طلب المنتجات التالية:\n";
+    cart.forEach(item=>{
+        message += `${item.name} - ${item.price}\n`;
+    });
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappURL = `https://wa.me/رقمك_هنا?text=${encodedMessage}`;
+    window.open(whatsappURL,"_blank");
+}
+</script>
 
 </body>
 </html>
