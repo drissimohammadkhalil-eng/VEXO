@@ -223,3 +223,6 @@ display:none;
 }
 
 }
+.logo img {
+  height: 50px; /* يمكن تعديل الحجم حسب رغبتك */
+}
