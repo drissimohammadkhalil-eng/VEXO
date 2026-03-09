@@ -1,131 +1,225 @@
-/* =================== */
-/* تصميم عام للموقع */
-body{
-    font-family: Arial, sans-serif;
-    margin:0;
-    background:#f5f5f5;
+/* Reset */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
 }
 
-header{
-    background:#111;
-    color:white;
-    padding:20px;
-    text-align:center;
-    font-size:28px;
-    font-weight:bold;
+body{
+background:#f5f5f5;
+color:#222;
 }
+
+
+/* Container */
+
+.container{
+width:90%;
+max-width:1200px;
+margin:auto;
+}
+
+
+/* Header */
+
+.header{
+background:white;
+position:sticky;
+top:0;
+z-index:1000;
+box-shadow:0 2px 10px rgba(0,0,0,0.05);
+}
+
+.nav-container{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 0;
+}
+
+.logo{
+font-size:24px;
+font-weight:700;
+letter-spacing:2px;
+}
+
+.nav a{
+margin:0 15px;
+text-decoration:none;
+color:#333;
+font-weight:500;
+transition:0.3s;
+}
+
+.nav a:hover{
+color:#000;
+}
+
+
+/* Hero */
 
 .hero{
-    background:#222 url('https://via.placeholder.com/1200x400') center/cover no-repeat;
-    color:white;
-    padding:80px 20px;
-    text-align:center;
+height:80vh;
+background:linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4)),
+url("image/hero.jpg");
+background-size:cover;
+background-position:center;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+color:white;
 }
 
 .hero h1{
-    font-size:48px;
-    margin-bottom:20px;
+font-size:48px;
+margin-bottom:15px;
 }
 
 .hero p{
-    font-size:20px;
-    margin-bottom:30px;
+font-size:18px;
+margin-bottom:25px;
 }
 
-.hero button{
-    background:#ff6600;
-    color:white;
-    border:none;
-    padding:15px 30px;
-    font-size:18px;
-    cursor:pointer;
-    border-radius:8px;
-    transition: 0.3s;
+.btn{
+background:#000;
+color:white;
+padding:12px 30px;
+text-decoration:none;
+border-radius:30px;
+transition:0.3s;
 }
 
-.hero button:hover{
-    background:#e65c00;
+.btn:hover{
+background:#444;
 }
 
-/* =================== */
-/* تصميم المنتجات */
+
+/* Products */
+
 .products{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:25px;
-    padding:40px 20px;
+padding:80px 0;
 }
 
-.product{
-    background:white;
-    padding:15px;
-    border-radius:10px;
-    width:220px;
-    box-shadow:0 0 10px rgba(0,0,0,0.1);
-    text-align:center;
-    transition: transform 0.3s, box-shadow 0.3s;
+.section-title{
+text-align:center;
+font-size:32px;
+margin-bottom:40px;
 }
 
-.product:hover{
-    transform: translateY(-5px);
-    box-shadow:0 10px 20px rgba(0,0,0,0.2);
+.product-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:30px;
 }
 
-.product img{
-    width:100%;
-    border-radius:10px;
-    margin-bottom:10px;
+.product-card{
+background:white;
+border-radius:12px;
+overflow:hidden;
+text-align:center;
+box-shadow:0 10px 30px rgba(0,0,0,0.05);
+transition:0.3s;
 }
 
-.product button{
-    background:#111;
-    color:white;
-    border:none;
-    padding:10px 20px;
-    cursor:pointer;
-    border-radius:5px;
-    transition: 0.3s;
+.product-card:hover{
+transform:translateY(-10px);
 }
 
-.product button:hover{
-    background:#333;
+.product-card img{
+width:100%;
+height:220px;
+object-fit:cover;
 }
 
-/* =================== */
-/* سلة المشتريات */
-.cart{
-    position:fixed;
-    top:20px;
-    right:20px;
-    background:white;
-    padding:15px;
-    border-radius:10px;
-    box-shadow:0 0 10px rgba(0,0,0,0.2);
-    text-align:left;
-    width:250px;
-    max-height:400px;
-    overflow-y:auto;
+.product-card h3{
+margin:15px 0;
 }
 
-.cart h3{
-    margin:0 0 10px 0;
+.price{
+color:#888;
+margin-bottom:15px;
 }
 
-.cart button{
-    background:red;
-    color:white;
-    border:none;
-    padding:2px 6px;
-    cursor:pointer;
-    border-radius:3px;
+.product-card button{
+background:#000;
+color:white;
+border:none;
+padding:10px 20px;
+border-radius:25px;
+cursor:pointer;
+margin-bottom:20px;
+transition:0.3s;
 }
 
-/* =================== */
-/* تصميم متجاوب */
-@media (max-width:768px){
-    .products{
-        flex-direction:column;
-        align-items:center;
-    }
+.product-card button:hover{
+background:#333;
+}
+
+
+/* Banner */
+
+.banner{
+background:black;
+color:white;
+padding:80px 0;
+text-align:center;
+}
+
+.banner h2{
+font-size:36px;
+margin-bottom:10px;
+}
+
+.banner p{
+margin-bottom:20px;
+}
+
+
+/* Footer */
+
+.footer{
+background:#111;
+color:#ccc;
+padding:60px 0;
+margin-top:50px;
+}
+
+.footer-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:40px;
+}
+
+.footer h3,.footer h4{
+color:white;
+margin-bottom:15px;
+}
+
+.footer p{
+margin-bottom:10px;
+}
+
+.copyright{
+text-align:center;
+margin-top:40px;
+font-size:14px;
+color:#777;
+}
+
+
+/* Responsive */
+
+@media(max-width:768px){
+
+.hero h1{
+font-size:32px;
+}
+
+.nav{
+display:none;
+}
+
 }
