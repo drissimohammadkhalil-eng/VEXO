@@ -1,103 +1,199 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VEXO Store</title>
+
+<title>VEXO | Premium Store</title>
+
+<meta name="description" content="VEXO Premium Online Store">
+
 <link rel="stylesheet" href="style.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 </head>
+
+
 <body>
 
-<header>VEXO STORE</header>
+
+<header class="header">
+
+<div class="container nav-container">
+
+<div class="logo">VEXO</div>
+
+<nav class="nav">
+
+<a href="#">Home</a>
+<a href="#">Shop</a>
+<a href="#">Collections</a>
+<a href="#">Contact</a>
+
+</nav>
+
+<div class="nav-icons">
+
+<span>🛒</span>
+
+</div>
+
+</div>
+
+</header>
+
+
 
 <section class="hero">
-<h1>أفضل المنتجات بأفضل الأسعار</h1>
-<p>متجر VEXO يقدم لك منتجات مميزة</p>
-<button onclick="scrollToProducts()">تسوق الآن</button>
+
+<div class="hero-content">
+
+<h1>Future of Online Shopping</h1>
+
+<p>Premium products with modern design</p>
+
+<a href="#" class="btn">Shop Now</a>
+
+</div>
+
 </section>
 
-<div class="cart">
-<h3>🛒 سلة المشتريات</h3>
-<div id="cart-items"></div>
-<p>إجمالي المنتجات: <span id="cart-count">0</span></p>
-<button onclick="checkout()">شراء الآن</button>
-</div>
 
-<h2 style="text-align:center;">منتجاتنا</h2>
 
-<div class="products" id="products">
+<section class="products container">
 
-<div class="product">
-<img src="https://via.placeholder.com/200x150.png?text=Smart+Watch" alt="ساعة ذكية">
-<h3>ساعة ذكية</h3>
-<p>السعر: 40$</p>
-<button onclick="addToCart(this)">أضف للسلة</button>
-</div>
+<h2 class="section-title">Featured Products</h2>
 
-<div class="product">
-<img src="https://via.placeholder.com/200x150.png?text=Headphones" alt="سماعات">
-<h3>سماعات</h3>
-<p>السعر: 25$</p>
-<button onclick="addToCart(this)">أضف للسلة</button>
-</div>
 
-<div class="product">
-<img src="https://via.placeholder.com/200x150.png?text=Bag" alt="حقيبة">
-<h3>حقيبة</h3>
-<p>السعر: 30$</p>
-<button onclick="addToCart(this)">أضف للسلة</button>
-</div>
+<div class="product-grid">
+
+
+<div class="product-card">
+
+<img src="image/product1.jpg">
+
+<h3>Premium Headphones</h3>
+
+<p class="price">$199</p>
+
+<button>Add to Cart</button>
 
 </div>
 
-<script>
-let cart = [];
 
-function addToCart(btn){
-    const product = btn.parentElement;
-    const name = product.querySelector("h3").innerText;
-    const price = product.querySelector("p").innerText;
-    cart.push({name, price});
-    updateCart();
-}
+<div class="product-card">
 
-function updateCart(){
-    const cartItems = document.getElementById("cart-items");
-    cartItems.innerHTML = "";
-    cart.forEach((item,index)=>{
-        cartItems.innerHTML += `${item.name} - ${item.price} <button onclick="removeItem(${index})">❌</button><br>`;
-    });
-    document.getElementById("cart-count").innerText = cart.length;
-}
+<img src="image/product2.jpg">
 
-function removeItem(index){
-    cart.splice(index,1);
-    updateCart();
-}
+<h3>Smart Watch</h3>
 
-function toggleCart(){
-    const itemsDiv = document.getElementById("cart-items");
-    itemsDiv.style.display = itemsDiv.style.display === "none" ? "block" : "none";
-}
+<p class="price">$149</p>
 
-function scrollToProducts(){
-    document.getElementById("products").scrollIntoView({behavior:"smooth"});
-}
+<button>Add to Cart</button>
 
-function checkout(){
-    if(cart.length===0){
-        alert("السلة فارغة!");
-        return;
-    }
-    let message = "أريد طلب المنتجات التالية:\n";
-    cart.forEach(item=>{
-        message += `${item.name} - ${item.price}\n`;
-    });
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappURL = `https://wa.me/رقمك_هنا?text=${encodedMessage}`;
-    window.open(whatsappURL,"_blank");
-}
-</script>
+</div>
+
+
+<div class="product-card">
+
+<img src="image/product3.jpg">
+
+<h3>Wireless Speaker</h3>
+
+<p class="price">$99</p>
+
+<button>Add to Cart</button>
+
+</div>
+
+
+<div class="product-card">
+
+<img src="image/product4.jpg">
+
+<h3>Gaming Mouse</h3>
+
+<p class="price">$79</p>
+
+<button>Add to Cart</button>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+
+<section class="banner">
+
+<div class="banner-content">
+
+<h2>Summer Sale</h2>
+
+<p>Up to 50% discount</p>
+
+<a href="#" class="btn">Explore</a>
+
+</div>
+
+</section>
+
+
+
+<footer class="footer">
+
+<div class="container footer-grid">
+
+
+<div>
+
+<h3>VEXO</h3>
+
+<p>Modern Ecommerce Experience</p>
+
+</div>
+
+
+<div>
+
+<h4>Shop</h4>
+
+<p>All Products</p>
+<p>Collections</p>
+<p>Offers</p>
+
+</div>
+
+
+<div>
+
+<h4>Support</h4>
+
+<p>Contact</p>
+<p>FAQ</p>
+<p>Shipping</p>
+
+</div>
+
+
+</div>
+
+
+<p class="copyright">
+
+© 2026 VEXO All Rights Reserved
+
+</p>
+
+</footer>
+
+
 
 </body>
+
 </html>
