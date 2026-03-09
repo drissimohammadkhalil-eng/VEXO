@@ -173,3 +173,29 @@ document.getElementById("cart-count").innerText = storedCart.length;
 }
 
 updateCart();
+let cart = [];
+
+function addToCart(name, price){
+
+cart.push({
+name:name,
+price:price
+});
+
+localStorage.setItem("cart",JSON.stringify(cart));
+
+updateCart();
+
+alert(name + " added to cart");
+
+}
+
+function updateCart(){
+
+let storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+
+document.getElementById("cart-count").innerText = storedCart.length;
+
+}
+
+updateCart();
