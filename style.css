@@ -182,35 +182,21 @@ margin-bottom:20px;
 
 /* Footer */
 
-.footer{
-background:#111;
-color:#ccc;
-padding:60px 0;
-margin-top:50px;
-}
-
-.footer-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-gap:40px;
-}
-
-.footer h3,.footer h4{
-color:white;
-margin-bottom:15px;
-}
-
-.footer p{
-margin-bottom:10px;
-}
-
-.copyright{
-text-align:center;
-margin-top:40px;
-font-size:14px;
-color:#777;
-}
-
+<footer class="main-footer">
+    <div class="container">
+        <div class="footer-content">
+            <p>© 2026 VEXO Store | Premium Products</p>
+            <div class="contact-links">
+                <a href="https://wa.me/213779310866?text=أريد_الاستفسار_عن_المنتجات" target="_blank" class="contact-btn whatsapp">
+                    <i class="fab fa-whatsapp"></i> واتساب
+                </a>
+                <a href="https://www.facebook.com/profile.php?id=61588568665394" target="_blank" class="contact-btn facebook">
+                    <i class="fab fa-facebook-f"></i> فيسبوك
+                </a>
+            </div>
+        </div>
+    </div>
+</footer>
 
 /* Responsive */
 
