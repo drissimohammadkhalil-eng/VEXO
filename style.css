@@ -182,22 +182,41 @@ margin-bottom:20px;
 
 /* Footer */
 
-<footer class="main-footer">
-    <div class="container">
-        <div class="footer-content">
-            <p>© 2026 VEXO Store | Premium Products</p>
-            <div class="contact-links">
-                <a href="https://wa.me/213779310866?text=أريد_الاستفسار_عن_المنتجات" target="_blank" class="contact-btn whatsapp">
-                    <i class="fab fa-whatsapp"></i> واتساب
-                </a>
-                <a href="https://www.facebook.com/profile.php?id=61588568665394" target="_blank" class="contact-btn facebook">
-                    <i class="fab fa-facebook-f"></i> فيسبوك
-                </a>
-            </div>
-        </div>
-    </div>
-</footer>
+/* تنسيق قسم التذييل */
+.main-footer {
+    background: #111;
+    color: white;
+    padding: 50px 0;
+    text-align: center;
+}
 
+.contact-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+/* تصميم الأزرار */
+.contact-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 25px;
+    border-radius: 50px;
+    text-decoration: none;
+    color: white !important;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.whatsapp { background-color: #25d366; } /* لون الواتساب */
+.facebook { background-color: #1877f2; } /* لون الفيسبوك */
+
+.contact-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
 /* Responsive */
 
 @media(max-width:768px){
