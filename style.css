@@ -1,148 +1,50 @@
-/* 1. إعدادات المتجر العامة */
 :root {
-    --primary: #2563eb;    /* اللون الأزرق الأساسي */
-    --secondary: #111827;  /* الأسود للأزرار والنصوص */
-    --accent: #e44d26;     /* اللون البرتقالي للسعر */
-    --bg-light: #f9fafb;   /* خلفية الموقع */
+    --primary: #2563eb;
+    --secondary: #111827;
+    --accent: #e44d26;
     --white: #ffffff;
+    --bg: #f9fafb;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+body { background-color: var(--bg); color: var(--secondary); direction: rtl; }
+.container { max-width: 1200px; margin: auto; padding: 0 20px; }
 
-body {
-    background-color: var(--bg-light);
-    direction: rtl; /* لضبط الاتجاه للعربية */
-}
-
-.container {
-    max-width: 1200px;
-    margin: auto;
-    padding: 0 20px;
-}
-
-/* 2. الهيدر وشريط التنقل */
-.navbar {
-    background: var(--white);
-    padding: 15px 0;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-.nav-flex {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.logo {
-    font-size: 26px;
-    font-weight: 800;
-    color: var(--secondary);
-}
-
+/* Navbar */
+.navbar { background: var(--white); padding: 15px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
+.nav-flex { display: flex; justify-content: space-between; align-items: center; }
+.logo { font-size: 24px; font-weight: bold; }
 .logo span { color: var(--primary); }
+.nav-icons { display: flex; gap: 20px; align-items: center; }
+.admin-lock-btn { border:none; background:none; cursor:pointer; font-size: 16px; }
 
-.nav-icons {
-    display: flex;
-    gap: 20px;
-    align-items: center;
-}
+/* Cart Icon */
+.cart-icon { position: relative; cursor: pointer; font-size: 22px; }
+#cart-count { position: absolute; top: -10px; right: -10px; background: var(--accent); color: white; font-size: 12px; padding: 2px 6px; border-radius: 50%; }
 
-.cart-icon {
-    position: relative;
-    cursor: pointer;
-    font-size: 20px;
-}
+/* Grid & Cards */
+.products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; padding: 40px 0; }
+.product-card { background: var(--white); border-radius: 12px; overflow: hidden; border: 1px solid #eee; transition: 0.3s; text-align: center; }
+.product-card img { width: 100%; height: 230px; object-fit: cover; background: #eee; }
+.product-info { padding: 15px; }
+.price { color: var(--accent); font-weight: bold; font-size: 20px; margin: 10px 0; }
 
-#cart-count {
-    position: absolute;
-    top: -10px;
-    right: -10px;
-    background: var(--accent);
-    color: white;
-    font-size: 12px;
-    padding: 2px 6px;
-    border-radius: 50%;
-}
+/* Buttons */
+.btn-buy { width: 90%; background: var(--secondary); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+.checkout-main-btn { background: var(--primary); }
+.whatsapp-btn { background: #25d366; }
+.close-btn { background: #666; margin-top: 10px; }
 
-/* 3. شبكة المنتجات */
-.products-section { padding: 50px 0; }
-.section-title { text-align: center; margin-bottom: 40px; font-size: 28px; }
+/* Sidebars */
+.sidebar { position: fixed; top: 0; left: -400px; width: 350px; height: 100%; background: var(--white); box-shadow: 5px 0 15px rgba(0,0,0,0.2); transition: 0.4s; z-index: 2000; padding: 25px; overflow-y: auto; }
+.sidebar.active { left: 0; }
 
-.products-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 30px;
-}
+/* Admin & Checkout Inputs */
+.admin-section { display:none; background:white; padding:20px; margin-top:20px; border:2px solid var(--primary); border-radius:10px; }
+.admin-input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; }
+.shipping-box { background:#f0f7ff; padding:15px; border-radius:8px; margin-top:15px; }
 
-.product-card {
-    background: var(--white);
-    border-radius: 15px;
-    overflow: hidden;
-    transition: 0.3s;
-    border: 1px solid #eee;
-}
-
-.product-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-}
-
-.product-card img {
-    width: 100%;
-    height: 250px;
-    object-fit: cover; /* لضمان عدم تشوه الصورة */
-}
-
-.product-info { padding: 20px; }
-.price-row { margin: 15px 0; font-size: 18px; font-weight: bold; color: var(--accent); }
-
-.add-to-cart {
-    width: 100%;
-    background: var(--secondary);
-    color: white;
-    border: none;
-    padding: 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
-}
-
-.add-to-cart:hover { background: var(--primary); }
-
-/* 4. السلة الجانبية (Logic CSS) */
-.cart-sidebar {
-    position: fixed;
-    top: 0;
-    left: -400px; /* مخفية لجهة اليسار */
-    width: 350px;
-    height: 100%;
-    background: var(--white);
-    box-shadow: 5px 0 15px rgba(0,0,0,0.2);
-    transition: 0.4s ease-in-out;
-    z-index: 2000;
-    padding: 25px;
-    display: flex;
-    flex-direction: column;
-}
-
-.cart-sidebar.active {
-    left: 0; /* تظهر عند إضافة الـ class بالـ JS */
-}
-
-/* 5. تذييل الصفحة */
-.main-footer {
-    background: var(--secondary);
-    color: white;
-    padding: 40px 0;
-    text-align: center;
-    margin-top: 50px;
-}
+/* Footer */
+.main-footer { background: var(--secondary); color: white; padding: 40px 0; text-align: center; margin-top: 50px; }
+.social-links { margin-top: 15px; display: flex; justify-content: center; gap: 20px; }
+.social-links a { color: white; font-size: 24px; text-decoration: none; }
