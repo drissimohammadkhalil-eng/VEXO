@@ -1,201 +1,64 @@
+// مصفوفة لتخزين محتويات السلة
+let cart = [];
+let total = 0;
 
-// ============================
-// VEXO STORE SCRIPT
-// ============================
+// وظيفة لفتح وإغلاق السلة
+function toggleCart() {
+    const sidebar = document.getElementById('cart-sidebar');
+    sidebar.classList.toggle('active');
+}
 
-// سلة المشتريات
-let cart = JSON.parse(localStorage.getItem("cart")) || []
-
-
-// ============================
-// إضافة منتج للسلة
-// ============================
-
+// وظيفة إضافة منتج للسلة
 function addToCart(name, price) {
-
-const product = {
-name: name,
-price: price
+    // التحقق إذا كان المنتج موجود مسبقاً
+    const existingItem = cart.find(item => item.name === name);
+    
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({ name: name, price: price, quantity: 1 });
+    }
+    
+    updateCartUI();
+    // تنبيه بسيط للمستخدم
+    console.log(`تم إضافة ${name} للسلة`);
 }
 
-cart.push(product)
+// وظيفة تحديث واجهة السلة
+function updateCartUI() {
+    const cartItemsElement = document.getElementById('cart-items');
+    const cartCountElement = document.getElementById('cart-count');
+    const cartTotalElement = document.getElementById('cart-total');
+    
+    // مسح المحتوى القديم
+    cartItemsElement.innerHTML = '';
+    
+    let itemCount = 0;
+    total = 0;
 
-saveCart()
+    cart.forEach((item, index) => {
+        itemCount += item.quantity;
+        total += item.price * item.quantity;
 
-alert("تمت إضافة المنتج إلى السلة")
+        cartItemsElement.innerHTML += `
+            <div class="cart-item">
+                <div class="item-details">
+                    <h4>${item.name}</h4>
+                    <p>${item.price} د.ج × ${item.quantity}</p>
+                </div>
+                <button onclick="removeFromCart(${index})" class="remove-btn">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        `;
+    });
 
+    cartCountElement.innerText = itemCount;
+    cartTotalElement.innerText = total.toLocaleString();
 }
 
-
-
-// ============================
-// حفظ السلة
-// ============================
-
-function saveCart(){
-
-localStorage.setItem("cart", JSON.stringify(cart))
-
+// وظيفة حذف منتج من السلة
+function removeFromCart(index) {
+    cart.splice(index, 1);
+    updateCartUI();
 }
-
-
-
-// ============================
-// عرض السلة
-// ============================
-
-function displayCart(){
-
-const cartContainer = document.getElementById("cart")
-
-if(!cartContainer) return
-
-cartContainer.innerHTML = ""
-
-let total = 0
-
-cart.forEach((product,index)=>{
-
-total += product.price
-
-cartContainer.innerHTML += `
-
-<div class="cart-item">
-
-<p>${product.name}</p>
-
-<p>${product.price} DA</p>
-
-<button onclick="removeFromCart(${index})">
-حذف
-</button>
-
-</div>
-
-`
-
-})
-
-document.getElementById("total").innerText = total + " DA"
-
-}
-
-
-
-// ============================
-// حذف منتج
-// ============================
-
-function removeFromCart(index){
-
-cart.splice(index,1)
-
-saveCart()
-
-displayCart()
-
-}
-
-
-
-// ============================
-// إرسال الطلب إلى WhatsApp
-// ============================
-
-function sendOrder(){
-
-let name = document.getElementById("name").value
-let phone = document.getElementById("phone").value
-let state = document.getElementById("state").value
-
-if(cart.length === 0){
-
-alert("السلة فارغة")
-
-return
-
-}
-
-let message = "طلب جديد من متجر VEXO%0A%0A"
-
-let total = 0
-
-cart.forEach(product=>{
-
-message += product.name + " - " + product.price + " DA%0A"
-
-total += product.price
-
-})
-
-message += "%0Aالمجموع: " + total + " DA"
-
-message += "%0A%0Aالاسم: " + name
-message += "%0Aالهاتف: " + phone
-message += "%0Aالولاية: " + state
-
-let whatsapp = "https://wa.me/213779310866?text=" + message
-
-window.open(whatsapp)
-
-}
-
-
-
-// ============================
-// تشغيل عرض السلة عند تحميل الصفحة
-// ============================
-
-displayCart()
-let cart = [];
-
-function addToCart(name, price){
-
-cart.push({
-name:name,
-price:price
-});
-
-localStorage.setItem("cart",JSON.stringify(cart));
-
-updateCart();
-
-alert(name + " added to cart");
-
-}
-
-function updateCart(){
-
-let storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-
-document.getElementById("cart-count").innerText = storedCart.length;
-
-}
-
-updateCart();
-let cart = [];
-
-function addToCart(name, price){
-
-cart.push({
-name:name,
-price:price
-});
-
-localStorage.setItem("cart",JSON.stringify(cart));
-
-updateCart();
-
-alert(name + " added to cart");
-
-}
-
-function updateCart(){
-
-let storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-
-document.getElementById("cart-count").innerText = storedCart.length;
-
-}
-
-updateCart();
