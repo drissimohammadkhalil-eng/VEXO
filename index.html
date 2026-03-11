@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VEXO | إدارة المتجر</title>
+    <title>VEXO | المتجر الاحترافي المتكامل</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
-        /* التنسيقات العامة */
         :root { --primary: #2563eb; --secondary: #111827; --accent: #e44d26; --white: #ffffff; --bg: #f9fafb; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background-color: var(--bg); color: var(--secondary); direction: rtl; }
@@ -20,22 +19,24 @@
         .cart-icon { position: relative; cursor: pointer; font-size: 22px; }
         #cart-count { position: absolute; top: -10px; right: -10px; background: var(--accent); color: white; font-size: 12px; padding: 2px 6px; border-radius: 50%; }
 
-        /* المنتجات */
+        /* Products */
         .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; padding: 40px 0; }
-        .product-card { background: var(--white); border-radius: 12px; overflow: hidden; border: 1px solid #eee; position: relative; padding-bottom: 15px; }
+        .product-card { background: var(--white); border-radius: 12px; overflow: hidden; border: 1px solid #eee; transition: 0.3s; text-align: center; }
         .product-card img { width: 100%; height: 230px; object-fit: cover; background: #eee; }
-        .product-info { padding: 15px; text-align: center; }
-        .price { color: var(--accent); font-weight: bold; font-size: 20px; }
-        .add-to-cart { width: 90%; background: var(--secondary); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; margin-top: 10px; }
+        .product-info { padding: 15px; }
+        .price { color: var(--accent); font-weight: bold; font-size: 20px; margin: 10px 0; }
+        .btn-buy { width: 90%; background: var(--secondary); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; }
 
-        /* لوحة التحكم (مخفية افتراضياً) */
-        #admin-panel { background: #fff; border: 2px solid var(--primary); padding: 20px; border-radius: 12px; margin-top: 50px; display: none; }
+        /* Sidebar Panels */
+        .sidebar { position: fixed; top: 0; left: -400px; width: 350px; height: 100%; background: var(--white); box-shadow: 5px 0 15px rgba(0,0,0,0.2); transition: 0.4s; z-index: 2000; padding: 25px; overflow-y: auto; }
+        .sidebar.active { left: 0; }
         .admin-input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; }
-        .admin-btn { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
         
-        /* السلة الجانبية */
-        .cart-sidebar { position: fixed; top: 0; left: -400px; width: 350px; height: 100%; background: var(--white); box-shadow: 5px 0 15px rgba(0,0,0,0.2); transition: 0.4s; z-index: 2000; padding: 25px; }
-        .cart-sidebar.active { left: 0; }
+        /* Footer & Social */
+        .main-footer { background: var(--secondary); color: white; padding: 40px 0; text-align: center; margin-top: 50px; }
+        .social-links { margin-top: 15px; display: flex; justify-content: center; gap: 20px; }
+        .social-links a { color: white; font-size: 24px; transition: 0.3s; }
+        .social-links a:hover { color: var(--primary); }
     </style>
 </head>
 <body>
@@ -44,94 +45,128 @@
         <div class="container nav-flex">
             <div class="logo">VEXO<span>Store</span></div>
             <div class="nav-icons">
-                <button onclick="loginAdmin()" style="border:none; background:none; cursor:pointer;"><i class="fas fa-lock"></i> لوحة الإدارة</button>
-                <div class="cart-icon" onclick="toggleCart()"><i class="fas fa-shopping-cart"></i><span id="cart-count">0</span></div>
+                <button onclick="loginAdmin()" style="border:none; background:none; cursor:pointer;"><i class="fas fa-lock"></i> الإدارة</button>
+                <div class="cart-icon" onclick="toggleSidebar('cart-sidebar')">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cart-count">0</span>
+                </div>
             </div>
         </div>
     </nav>
 
     <div class="container">
-        <div id="admin-panel">
+        <div id="admin-panel" style="display:none; background:white; padding:20px; margin-top:20px; border:2px solid var(--primary); border-radius:10px;">
             <h3>إضافة منتج جديد</h3>
             <input type="text" id="p-name" class="admin-input" placeholder="اسم المنتج">
-            <input type="number" id="p-price" class="admin-input" placeholder="السعر (د.ج)">
-            <input type="text" id="p-img" class="admin-input" placeholder="رابط الصورة (أو اسم الملف في مجلد images)">
-            <button class="admin-btn" onclick="addNewProduct()">إضافة للمتجر</button>
+            <input type="number" id="p-price" class="admin-input" placeholder="السعر">
+            <input type="text" id="p-img" class="admin-input" placeholder="رابط الصورة">
+            <button onclick="addNewProduct()" class="btn-buy" style="background:var(--primary)">حفظ المنتج</button>
         </div>
 
-        <div class="products-grid" id="main-products">
-            </div>
+        <div class="products-grid" id="main-products"></div>
     </div>
 
-    <div id="cart-sidebar" class="cart-sidebar">
+    <div id="cart-sidebar" class="sidebar">
+        <h3>سلة المشتريات</h3><hr><br>
         <div id="cart-items"></div>
-        <p>الإجمالي: <span id="cart-total">0</span> د.ج</p>
-        <button class="add-to-cart" onclick="toggleCart()">إغلاق</button>
+        <p style="margin-top:20px; font-weight:bold;">مجموع المنتجات: <span id="cart-total">0</span> د.ج</p>
+        <button class="btn-buy" style="margin-top:20px; background:var(--primary);" onclick="openCheckout()">إتمام الطلب</button>
+        <button class="btn-buy" style="margin-top:10px;" onclick="toggleSidebar('cart-sidebar')">إغلاق</button>
     </div>
+
+    <div id="checkout-sidebar" class="sidebar">
+        <h3>معلومات التوصيل</h3><hr><br>
+        <input type="text" id="cust-name" class="admin-input" placeholder="الاسم الكامل">
+        <input type="tel" id="cust-phone" class="admin-input" placeholder="رقم الهاتف">
+        
+        <label>الولاية:</label>
+        <select id="wilaya-select" class="admin-input" onchange="calculateShipping()">
+            <option value="0" data-price="0">-- اختر الولاية --</option>
+            <option value="الجزائر" data-price="400">01 - الجزائر (400 د.ج)</option>
+            <option value="الشلف" data-price="600">02 - الشلف (600 د.ج)</option>
+            <option value="البليدة" data-price="400">09 - البليدة (400 د.ج)</option>
+            <option value="بويرة" data-price="500">10 - البويرة (500 د.ج)</option>
+            <option value="وهران" data-price="600">31 - وهران (600 د.ج)</option>
+            </select>
+
+        <div style="background:#f0f7ff; padding:15px; border-radius:8px; margin-top:15px;">
+            <p>التوصيل: <span id="shipping-cost">0</span> د.ج</p>
+            <p><strong>الإجمالي: <span id="final-total">0</span> د.ج</strong></p>
+        </div>
+        
+        <button class="btn-buy" style="margin-top:20px; background:#25d366;" onclick="confirmOrder()">تأكيد عبر واتساب <i class="fab fa-whatsapp"></i></button>
+        <button class="btn-buy" style="margin-top:10px;" onclick="toggleSidebar('checkout-sidebar')">رجوع</button>
+    </div>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>© 2026 VEXO Store | جميع الحقوق محفوظة</p>
+            <div class="social-links">
+                <a href="https://wa.me/213779310866" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://www.facebook.com/profile.php?id=61588568665394" target="_blank"><i class="fab fa-facebook"></i></a>
+            </div>
+        </div>
+    </footer>
 
     <script>
-        // بيانات المنتجات الأولية
         let products = [
-            { id: 1, name: "ساعة Luxury", price: 12500, img: "images/p1.jpg" },
-            { id: 2, name: "حذاء Sport", price: 8500, img: "images/p2.jpg" }
+            { id: 1, name: "ساعة Luxury Silver", price: 12500, img: "images/p1.jpg" },
+            { id: 2, name: "حذاء Premium Sport", price: 8500, img: "images/p2.jpg" }
         ];
         let cart = [];
 
-        // عرض المنتجات
         function renderProducts() {
-            const container = document.getElementById('main-products');
-            container.innerHTML = products.map(p => `
+            document.getElementById('main-products').innerHTML = products.map(p => `
                 <div class="product-card">
                     <img src="${p.img}" onerror="this.src='https://via.placeholder.com/250'">
                     <div class="product-info">
                         <h3>${p.name}</h3>
                         <p class="price">${p.price.toLocaleString()} د.ج</p>
-                        <button class="add-to-cart" onclick="addToCart('${p.name}', ${p.price})">إضافة للسلة</button>
-                        <button onclick="deleteProduct(${p.id})" style="background:red; color:white; border:none; margin-top:5px; padding:2px 5px; border-radius:3px; font-size:10px; display:none;" class="admin-only">حذف</button>
+                        <button class="btn-buy" onclick="addToCart('${p.name}', ${p.price})">إضافة للسلة</button>
                     </div>
                 </div>
             `).join('');
         }
 
-        // تسجيل دخول الإدارة
-        function loginAdmin() {
-            let pass = prompt("أدخل كلمة مرور الإدارة:");
-            if(pass === "1234") {
-                document.getElementById('admin-panel').style.display = 'block';
-                document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'block');
-                alert("مرحباً بك أيها المدير!");
-            } else {
-                alert("كلمة مرور خاطئة!");
-            }
-        }
+        function toggleSidebar(id) { document.getElementById(id).classList.toggle('active'); }
 
-        // إضافة منتج جديد
-        function addNewProduct() {
-            const name = document.getElementById('p-name').value;
-            const price = parseInt(document.getElementById('p-price').value);
-            const img = document.getElementById('p-img').value;
-
-            if(name && price) {
-                products.push({ id: Date.now(), name, price, img });
-                renderProducts();
-                alert("تمت الإضافة بنجاح!");
-            }
-        }
-
-        // السلة (وظائف مختصرة)
-        function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('active'); }
-        function addToCart(n, p) { 
-            cart.push({n, p}); 
-            document.getElementById('cart-count').innerText = cart.length; 
+        function addToCart(n, p) {
+            cart.push({n, p});
+            document.getElementById('cart-count').innerText = cart.length;
             updateCartUI();
+            toggleSidebar('cart-sidebar');
         }
+
         function updateCartUI() {
             let total = cart.reduce((sum, item) => sum + item.p, 0);
             document.getElementById('cart-total').innerText = total.toLocaleString();
+            document.getElementById('cart-items').innerHTML = cart.map((item, i) => `
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom:1px solid #eee;">
+                    <span>${item.n}</span>
+                    <b style="color:red; cursor:pointer;" onclick="removeItem(${i})">×</b>
+                </div>
+            `).join('');
         }
 
-        // تشغيل العرض عند التحميل
-        renderProducts();
-    </script>
-</body>
-</html>
+        function removeItem(i) { cart.splice(i, 1); updateCartUI(); document.getElementById('cart-count').innerText = cart.length; }
+
+        function openCheckout() {
+            if(cart.length === 0) return alert("السلة فارغة");
+            toggleSidebar('cart-sidebar');
+            toggleSidebar('checkout-sidebar');
+            calculateShipping();
+        }
+
+        function calculateShipping() {
+            const select = document.getElementById('wilaya-select');
+            const ship = parseInt(select.options[select.selectedIndex].getAttribute('data-price')) || 0;
+            const sub = cart.reduce((sum, item) => sum + item.p, 0);
+            document.getElementById('shipping-cost').innerText = ship;
+            document.getElementById('final-total').innerText = (sub + ship).toLocaleString();
+        }
+
+        function confirmOrder() {
+            const name = document.getElementById('cust-name').value;
+            const phone = document.getElementById('cust-phone').value;
+            const wilaya = document.getElementById('wilaya-select').value;
+            if(!name || !phone || wilaya ===
