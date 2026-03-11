@@ -10,3 +10,47 @@
 <body>
     </body>
 </html>
+<nav class="navbar">
+    <div class="container nav-flex">
+        <div class="logo">VEXO<span>Store</span></div>
+        <div class="nav-icons">
+            <a href="#" class="user-link"><i class="fas fa-user"></i> دخول</a>
+            <div class="cart-icon" onclick="toggleCart()">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cart-count">0</span>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<section class="products-section container">
+    <h2 class="section-title">المنتجات المتاحة</h2>
+    <div class="products-grid" id="products-container">
+        <div class="product-card">
+            <div class="badge">متاح</div>
+            <img src="images/p1.jpg" alt="ساعة فاخرة">
+            <div class="product-info">
+                <h3>ساعة Luxury Silver</h3>
+                <p class="category">ساعات</p>
+                <div class="price-row">
+                    <span class="price">12,500 د.ج</span>
+                    <span class="stock">المخزون: 5</span>
+                </div>
+                <button class="add-to-cart" onclick="addToCart('ساعة فاخرة', 12500)">إضافة للسلة</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div id="cart-sidebar" class="cart-sidebar">
+    <div class="cart-header">
+        <h3>سلة المشتريات</h3>
+        <i class="fas fa-times" onclick="toggleCart()"></i>
+    </div>
+    <div id="cart-items">
+        </div>
+    <div class="cart-footer">
+        <div class="total">الإجمالي: <span id="cart-total">0</span> د.ج</div>
+        <button class="checkout-btn">إتمام الطلب</button>
+    </div>
+</div>
