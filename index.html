@@ -3,209 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VEXO STORE | النسخة الاحترافية المستقرة</title>
+    <title>VEXO STORE | المتجر الرسمي</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --main: #2563eb; --accent: #22c55e; --danger: #ef4444; --text: #1e293b; }
+        :root { --main: #2563eb; --accent: #22c55e; --text: #1e293b; --bg: #f8fafc; }
         * { box-sizing: border-box; font-family: 'Cairo', sans-serif; margin: 0; padding: 0; }
-        body { background: #f1f5f9; color: var(--text); direction: rtl; line-height: 1.6; }
+        body { background: var(--bg); color: var(--text); direction: rtl; line-height: 1.6; }
 
-        /* الصفحة الرئيسية */
-        .lp-container { max-width: 600px; margin: auto; background: white; min-height: 100vh; padding-bottom: 160px; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+        /* الهيدر */
         .header { background: white; padding: 15px; text-align: center; border-bottom: 2px solid var(--main); position: sticky; top: 0; z-index: 1000; }
-        .logo-img { max-height: 60px; max-width: 200px; display: block; margin: auto; object-fit: contain; }
-        .product-img { width: 100%; height: auto; display: block; background: #eee; min-height: 250px; }
-        .product-info { padding: 20px; }
-        .price-tag { font-size: 30px; color: var(--main); font-weight: 900; margin-bottom: 15px; }
+        .logo-img { max-height: 55px; display: block; margin: auto; }
+
+        /* حاوية المنتج */
+        .container { max-width: 600px; margin: auto; background: white; min-height: 100vh; padding-bottom: 120px; box-shadow: 0 0 20px rgba(0,0,0,0.05); }
+        .product-img { width: 100%; height: auto; display: block; background: #eee; }
+        .product-info { padding: 25px; }
+        .price { font-size: 32px; color: var(--main); font-weight: 900; margin-bottom: 15px; }
         
-        /* تواصل معنا */
-        .contact-section { padding: 15px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .c-link { background: #f8fafc; padding: 12px; border-radius: 10px; text-align: center; text-decoration: none; color: var(--text); border: 1px solid #e2e8f0; font-weight: bold; }
-        .c-link i { display: block; font-size: 20px; margin-bottom: 5px; }
+        /* المميزات */
+        .features { background: #f0fdf4; padding: 15px; border-radius: 12px; margin: 20px 0; border: 1px solid #dcfce7; }
+        .feat-item { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-weight: 700; }
+        .feat-item i { color: var(--accent); }
 
         /* أزرار الطلب */
         .footer-cta { position: fixed; bottom: 0; left: 0; width: 100%; background: white; padding: 15px; box-shadow: 0 -5px 15px rgba(0,0,0,0.1); text-align: center; z-index: 2000; }
-        .btn-buy { background: var(--accent); color: white; border: none; padding: 18px; border-radius: 50px; width: 95%; max-width: 500px; font-size: 20px; font-weight: 900; cursor: pointer; }
+        .btn-order { background: var(--accent); color: white; border: none; padding: 18px; border-radius: 50px; width: 95%; max-width: 500px; font-size: 22px; font-weight: 900; cursor: pointer; transition: 0.3s; }
+        .btn-order:disabled { background: #ccc; cursor: not-allowed; }
 
-        /* لوحة التحكم */
-        #admin-panel { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f1f5f9; z-index: 9999; padding: 20px; overflow-y: auto; }
-        .admin-box { background: white; padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #ddd; }
-        .order-card { background: white; padding: 15px; border-radius: 10px; margin-bottom: 10px; border-right: 6px solid var(--main); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .order-card.done { border-right-color: var(--accent); background: #f0fdf4; }
-        
-        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; text-align: right; font-size: 16px; }
-        label { font-weight: bold; font-size: 13px; color: var(--main); }
-
+        /* المودال */
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; z-index: 5000; align-items: center; justify-content: center; }
-        .modal-content { background: white; width: 92%; max-width: 400px; border-radius: 20px; padding: 20px; }
-        
-        #master-v { position: fixed; bottom: 100px; left: 10px; width: 35px; height: 35px; background: #000; opacity: 0.1; border-radius: 5px; z-index: 1500; cursor: pointer; }
+        .modal-content { background: white; width: 95%; max-width: 450px; border-radius: 25px; padding: 25px; position: relative; }
+        input, select { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #ddd; border-radius: 12px; font-size: 16px; text-align: right; }
     </style>
 </head>
 <body>
 
-    <div class="lp-container">
+    <div class="container">
         <header class="header">
-            <img id="ui-logo" src="" class="logo-img" alt="Logo">
+            <img src="logo.png" class="logo-img" onerror="this.src='https://via.placeholder.com/200x60?text=VEXO+STORE'">
         </header>
 
-        <img id="ui-p-img" src="" class="product-img" alt="Product">
+        <img src="product.png" class="product-img" onerror="this.src='https://via.placeholder.com/600x600?text=Product+Image'">
 
         <div class="product-info">
-            <h1 id="ui-title" style="font-size:24px; font-weight:900; margin-bottom:10px;">تحميل البيانات...</h1>
-            <div class="price-tag"><span id="ui-price">0</span> د.ج</div>
+            <h1 style="font-size: 26px; font-weight: 900; margin-bottom: 10px;">هاتف ذكي احترافي VEXO</h1>
+            <div class="price">35,000 د.ج</div>
             
-            <div style="background:#fffbeb; padding:12px; border-radius:10px; border:1px solid #fde68a; margin-bottom:15px;">
-                <p>🚚 التوصيل متاح لجميع الولايات (58)</p>
-                <p>💰 الدفع عند استلام المنتج</p>
+            <div class="features">
+                <div class="feat-item"><i class="fas fa-truck"></i> توصيل سريع لـ 58 ولاية</div>
+                <div class="feat-item"><i class="fas fa-check-circle"></i> ضمان الجودة وسعر تنافسي</div>
+                <div class="feat-item"><i class="fas fa-money-bill-wave"></i> الدفع عند الاستلام</div>
             </div>
-        </div>
 
-        <div class="contact-section">
-            <a href="tel:0550000000" id="ui-tel" class="c-link"><i class="fas fa-phone"></i> اتصل بنا</a>
-            <a href="https://wa.me/213550000000" id="ui-wa" class="c-link"><i class="fab fa-whatsapp" style="color:green;"></i> واتساب</a>
+            <p style="color: #64748b;">يرجى ملء الاستمارة أدناه لطلب المنتج. سنتصل بك في أقرب وقت ممكن لتأكيد الطلبية وتحديد موعد الإرسال.</p>
         </div>
     </div>
 
     <div class="footer-cta">
-        <button class="btn-buy" onclick="openOrderModal()">اطلب الآن - إضغط هنا</button>
-    </div>
-
-    <div id="admin-panel">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h3>⚙️ الإدارة (<span id="count">0</span>)</h3>
-            <button onclick="closeAdmin()" style="background:var(--danger); color:white; border:none; padding:8px 15px; border-radius:8px;">إغلاق</button>
-        </div>
-
-        <div class="admin-box">
-            <label>تغيير اللوغو:</label> <input type="file" accept="image/*" onchange="handleImage(this, 'logo')">
-            <label>صورة المنتج:</label> <input type="file" accept="image/*" onchange="handleImage(this, 'pImg')">
-            <input type="text" id="set-t" placeholder="اسم المنتج">
-            <input type="text" id="set-p" placeholder="السعر">
-            <button onclick="saveAdmin()" style="width:100%; background:var(--main); color:white; border:none; padding:12px; border-radius:8px;">حفظ الإعدادات</button>
-        </div>
-
-        <div id="orders-display"></div>
-        <button onclick="clearAll()" style="width:100%; background:#64748b; color:white; border:none; padding:10px; border-radius:8px; margin-top:20px;">حذف كافة الطلبات</button>
+        <button class="btn-order" onclick="openModal()">اطلب الآن - إضغط هنا</button>
     </div>
 
     <div id="order-modal" class="modal">
-        <div class="modal-content" id="modal-form">
-            <h2 style="text-align:center; margin-bottom:15px;">إتمام الطلب</h2>
-            <input type="text" id="in-name" placeholder="الاسم واللقب">
-            <input type="tel" id="in-phone" placeholder="رقم الهاتف">
-            <select id="in-wilaya">
-                <option value="" disabled selected>اختر الولاية (58)</option>
-                <option value="01- أدرار">01- أدرار</option><option value="02- الشلف">02- الشلف</option><option value="03- الأغواط">03- الأغواط</option><option value="04- أم البواقي">04- أم البواقي</option><option value="05- باتنة">05- باتنة</option><option value="06- بجاية">06- بجاية</option><option value="07- بسكرة">07- بسكرة</option><option value="08- بشار">08- بشار</option><option value="09- البليدة">09- البليدة</option><option value="10- البويرة">10- البويرة</option><option value="11- تمنراست">11- تمنراست</option><option value="12- تبسة">12- تبسة</option><option value="13- تلمسان">13- تلمسان</option><option value="14- تيارت">14- تيارت</option><option value="15- تيزي وزو">15- تيزي وزو</option><option value="16- الجزائر العاصمة">16- الجزائر العاصمة</option><option value="17- الجلفة">17- الجلفة</option><option value="18- جيجل">18- جيجل</option><option value="19- سطيف">19- سطيف</option><option value="20- سعيدة">20- سعيدة</option><option value="21- سكيكدة">21- سكيكدة</option><option value="22- سيدي بلعباس">22- سيدي بلعباس</option><option value="23- عنابة">23- عنابة</option><option value="24- قالمة">24- قالمة</option><option value="25- قسنطينة">25- قسنطينة</option><option value="26- المدية">26- المدية</option><option value="27- مستغانم">27- مستغانم</option><option value="28- المسيلة">28- المسيلة</option><option value="29- معسكر">29- معسكر</option><option value="30- ورقلة">30- ورقلة</option><option value="31- وهران">31- وهران</option><option value="32- البيض">32- البيض</option><option value="33- إليزي">33- إليزي</option><option value="34- برج بوعريريج">34- برج بوعريريج</option><option value="35- بومرداس">35- بومرداس</option><option value="36- الطارف">36- الطارف</option><option value="37- تندوف">37- تندوف</option><option value="38- تيسمسيلت">38- تيسمسيلت</option><option value="39- الوادي">39- الوادي</option><option value="40- خنشلة">40- خنشلة</option><option value="41- سوق أهراس">41- سوق أهراس</option><option value="42- تيبازة">42- تيبازة</option><option value="43- ميلة">43- ميلة</option><option value="44- عين الدفلى">44- عين الدفلى</option><option value="45- النعامة">45- النعامة</option><option value="46- عين تموشنت">46- عين تموشنت</option><option value="47- غرداية">47- غرداية</option><option value="48- غليزان">48- غليزان</option><option value="49- تيميمون">49- تيميمون</option><option value="50- برج باجي مختار">50- برج باجي مختار</option><option value="51- أولاد جلال">51- أولاد جلال</option><option value="52- بني عباس">52- بني عباس</option><option value="53- عين صالح">53- عين صالح</option><option value="54- عين قزام">54- عين قزام</option><option value="55- تقرت">55- تقرت</option><option value="56- جنايت">56- جنايت</option><option value="57- المغير">57- المغير</option><option value="58- المنيعة">58- المنيعة</option>
-            </select>
-            <button onclick="sendOrder()" class="btn-buy" style="width:100%; margin-top:10px;">إرسال الطلب</button>
-            <button onclick="closeOrderModal()" style="width:100%; background:none; border:none; color:gray; margin-top:10px; cursor:pointer;">إلغاء</button>
+        <div class="modal-content" id="modal-body">
+            <h2 style="text-align: center; margin-bottom: 20px;">تأكيد الطلبية</h2>
+            
+            <form id="order-form">
+                <input type="text" name="الاسم" placeholder="الاسم واللقب بالكامل" required>
+                <input type="tel" name="الهاتف" placeholder="رقم الهاتف" required>
+                <select name="الولاية" required>
+                    <option value="" disabled selected>اختر ولايتك (58 ولاية)</option>
+                    <option value="01- أدرار">01- أدرار</option><option value="02- الشلف">02- الشلف</option><option value="03- الأغواط">03- الأغواط</option><option value="04- أم البواقي">04- أم البواقي</option><option value="05- باتنة">05- باتنة</option><option value="06- بجاية">06- بجاية</option><option value="07- بسكرة">07- بسكرة</option><option value="08- بشار">08- بشار</option><option value="09- البليدة">09- البليدة</option><option value="10- البويرة">10- البويرة</option><option value="11- تمنراست">11- تمنراست</option><option value="12- تبسة">12- تبسة</option><option value="13- تلمسان">13- تلمسان</option><option value="14- تيارت">14- تيارت</option><option value="15- تيزي وزو">15- تيزي وزو</option><option value="16- الجزائر العاصمة">16- الجزائر العاصمة</option><option value="17- الجلفة">17- الجلفة</option><option value="18- جيجل">18- جيجل</option><option value="19- سطيف">19- سطيف</option><option value="20- سعيدة">20- سعيدة</option><option value="21- سكيكدة">21- سكيكدة</option><option value="22- سيدي بلعباس">22- سيدي بلعباس</option><option value="23- عنابة">23- عنابة</option><option value="24- قالمة">24- قالمة</option><option value="25- قسنطينة">25- قسنطينة</option><option value="26- المدية">26- المدية</option><option value="27- مستغانم">27- مستغانم</option><option value="28- المسيلة">28- المسيلة</option><option value="29- معسكر">29- معسكر</option><option value="30- ورقلة">30- ورقلة</option><option value="31- وهران">31- وهران</option><option value="32- البيض">32- البيض</option><option value="33- إليزي">33- إليزي</option><option value="34- برج بوعريريج">34- برج بوعريريج</option><option value="35- بومرداس">35- بومرداس</option><option value="36- الطارف">36- الطارف</option><option value="37- تندوف">37- تندوف</option><option value="38- تيسمسيلت">38- تيسمسيلت</option><option value="39- الوادي">39- الوادي</option><option value="40- خنشلة">40- خنشلة</option><option value="41- سوق أهراس">41- سوق أهراس</option><option value="42- تيبازة">42- تيبازة</option><option value="43- ميلة">43- ميلة</option><option value="44- عين الدفلى">44- عين الدفلى</option><option value="45- النعامة">45- النعامة</option><option value="46- عين تموشنت">46- عين تموشنت</option><option value="47- غرداية">47- غرداية</option><option value="48- غليزان">48- غليزان</option><option value="49- تيميمون">49- تيميمون</option><option value="50- برج باجي مختار">50- برج باجي مختار</option><option value="51- أولاد جلال">51- أولاد جلال</option><option value="52- بني عباس">52- بني عباس</option><option value="53- عين صالح">53- عين صالح</option><option value="54- عين قزام">54- عين قزام</option><option value="55- تقرت">55- تقرت</option><option value="56- جنايت">56- جنايت</option><option value="57- المغير">57- المغير</option><option value="58- المنيعة">58- المنيعة</option>
+                </select>
+                <button type="submit" id="submit-btn" class="btn-order" style="width: 100%; margin-top: 10px;">إرسال الطلب</button>
+            </form>
+            <button onclick="closeModal()" style="background:none; border:none; color:gray; width:100%; margin-top:15px; cursor:pointer;">إلغاء</button>
         </div>
     </div>
 
-    <div id="master-v" onclick="showAdmin()"></div>
-
     <script>
-        // داتابيس بسيطة
-        let v_conf = JSON.parse(localStorage.getItem('v_conf_v5')) || {
-            logo: 'https://via.placeholder.com/200x60?text=VEXO',
-            pImg: 'https://via.placeholder.com/600x600?text=Product',
-            title: 'منتج ممتاز للبيع',
-            price: '3500'
+        function openModal() { document.getElementById('order-modal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('order-modal').style.display = 'none'; }
+
+        const form = document.getElementById('order-form');
+        
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            btn.innerText = "جاري الإرسال...";
+            btn.disabled = true;
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch("https://formspree.io/f/xzdjgjee", {
+                    method: "POST",
+                    body: formData,
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                if (response.ok) {
+                    document.getElementById('modal-body').innerHTML = `
+                        <div style="text-align:center; padding:20px;">
+                            <i class="fas fa-check-circle" style="font-size:60px; color:var(--accent);"></i>
+                            <h2 style="margin-top:15px;">شكراً لك!</h2>
+                            <p>تم استلام طلبك بنجاح. سنتصل بك قريباً.</p>
+                            <button onclick="location.reload()" class="btn-order" style="margin-top:20px; font-size:16px;">العودة للمتجر</button>
+                        </div>`;
+                } else {
+                    alert("حدث خطأ في الإرسال، يرجى المحاولة مرة أخرى.");
+                    btn.innerText = "إرسال الطلب";
+                    btn.disabled = false;
+                }
+            } catch (error) {
+                alert("تأكد من اتصالك بالإنترنت");
+                btn.innerText = "إرسال الطلب";
+                btn.disabled = false;
+            }
         };
-        let v_orders = JSON.parse(localStorage.getItem('v_orders_v5')) || [];
-
-        function sync() {
-            document.getElementById('ui-logo').src = v_conf.logo;
-            document.getElementById('ui-p-img').src = v_conf.pImg;
-            document.getElementById('ui-title').innerText = v_conf.title;
-            document.getElementById('ui-price').innerText = v_conf.price;
-        }
-
-        function sendOrder() {
-            const n = document.getElementById('in-name').value;
-            const p = document.getElementById('in-phone').value;
-            const w = document.getElementById('in-wilaya').value;
-
-            if(!n || !p || !w) return alert("يرجى إكمال البيانات");
-
-            const order = { id: Date.now(), name: n, phone: p, wilaya: w, date: new Date().toLocaleString('ar-DZ'), status: 'new' };
-            v_orders.push(order);
-            localStorage.setItem('v_orders_v5', JSON.stringify(v_orders));
-
-            document.getElementById('modal-form').innerHTML = `
-                <div style="text-align:center; padding:20px;">
-                    <i class="fas fa-check-circle" style="font-size:50px; color:var(--accent);"></i>
-                    <h2 style="margin-top:15px;">شكراً لك!</h2>
-                    <p>تم استلام طلبك بنجاح.</p>
-                    <button onclick="location.reload()" class="btn-buy" style="margin-top:15px;">إغلاق</button>
-                </div>`;
-        }
-
-        function showAdmin() {
-            if(prompt("الباسورد:") === "1234") {
-                document.getElementById('admin-panel').style.display = 'block';
-                document.getElementById('set-t').value = v_conf.title;
-                document.getElementById('set-p').value = v_conf.price;
-                drawOrders();
-            }
-        }
-
-        function drawOrders() {
-            const box = document.getElementById('orders-display');
-            document.getElementById('count').innerText = v_orders.length;
-            box.innerHTML = v_orders.length === 0 ? '<p style="text-align:center; padding:20px;">لا توجد طلبيات</p>' : 
-            v_orders.slice().reverse().map(o => `
-                <div class="order-card ${o.status === 'done' ? 'done' : ''}">
-                    <strong>👤 ${o.name}</strong> | 📞 <a href="tel:${o.phone}">${o.phone}</a><br>
-                    📍 ${o.wilaya} | 📅 ${o.date}<br>
-                    <div style="margin-top:10px;">
-                        <button onclick="markOrder(${o.id})" style="background:var(--accent); color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">تأكيد</button>
-                        <button onclick="delOrder(${o.id})" style="background:var(--danger); color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">حذف</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function handleImage(input, key) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                v_conf[key] = e.target.result;
-                localStorage.setItem('v_conf_v5', JSON.stringify(v_conf));
-                sync();
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-
-        function saveAdmin() {
-            v_conf.title = document.getElementById('set-t').value;
-            v_conf.price = document.getElementById('set-p').value;
-            localStorage.setItem('v_conf_v5', JSON.stringify(v_conf));
-            sync();
-            alert("تم الحفظ");
-        }
-
-        function markOrder(id) {
-            v_orders = v_orders.map(o => o.id === id ? {...o, status: 'done'} : o);
-            localStorage.setItem('v_orders_v5', JSON.stringify(v_orders));
-            drawOrders();
-        }
-
-        function delOrder(id) {
-            if(confirm("حذف؟")) {
-                v_orders = v_orders.filter(o => o.id !== id);
-                localStorage.setItem('v_orders_v5', JSON.stringify(v_orders));
-                drawOrders();
-            }
-        }
-
-        function clearAll() { if(confirm("مسح الكل؟")) { v_orders = []; localStorage.setItem('v_orders_v5', JSON.stringify(v_orders)); drawOrders(); } }
-        function openOrderModal() { document.getElementById('order-modal').style.display = 'flex'; }
-        function closeOrderModal() { document.getElementById('order-modal').style.display = 'none'; }
-        function closeAdmin() { document.getElementById('admin-panel').style.display = 'none'; }
-
-        window.onload = sync;
     </script>
 </body>
 </html>
