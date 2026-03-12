@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VEXO | المتجر المتكامل</title>
+    <title>VEXO | المتجر الاحترافي المتكامل</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -22,34 +22,51 @@
         </div>
     </nav>
 
+    <header class="hero-section">
+        <div class="container hero-flex">
+            <div class="hero-content">
+                <h1>اكتشف الفخامة مع <span>VEXO</span></h1>
+                <p>أفضل المنتجات العالمية بجودة استثنائية وتوصيل سريع وموثوق إلى 58 ولاية جزائرية.</p>
+                <div class="hero-btns">
+                    <a href="#main-products" class="btn-primary">تسوق الآن</a>
+                    <a href="https://wa.me/213779310866" class="btn-outline">تواصل معنا</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="images/hero-banner.jpg" alt="VEXO Store" onerror="this.src='https://via.placeholder.com/500x400'">
+            </div>
+        </div>
+    </header>
+
     <div class="container">
         <div id="admin-panel" class="admin-section" style="display:none;">
             <h3>إضافة منتج جديد</h3>
             <input type="text" id="p-name" class="admin-input" placeholder="اسم المنتج">
-            <input type="number" id="p-price" class="admin-input" placeholder="السعر">
-            <input type="text" id="p-img" class="admin-input" placeholder="رابط الصورة">
-            <button onclick="addNewProduct()" class="btn-buy" style="background:var(--primary)">حفظ المنتج</button>
+            <input type="number" id="p-price" class="admin-input" placeholder="السعر بالدينار">
+            <input type="text" id="p-img" class="admin-input" placeholder="رابط صورة المنتج">
+            <button onclick="addNewProduct()" class="btn-buy" style="background:var(--primary)">حفظ المنتج في المتجر</button>
         </div>
 
-        <div class="products-grid" id="main-products"></div>
+        <div class="products-grid" id="main-products">
+            </div>
     </div>
 
     <div id="cart-sidebar" class="sidebar">
         <h3>سلة المشتريات</h3><hr><br>
         <div id="cart-items"></div>
-        <p class="total-text">مجموع المنتجات: <span id="cart-total">0</span> د.ج</p>
+        <p class="total-text">مجموع السلع: <span id="cart-total">0</span> د.ج</p>
         <button class="btn-buy checkout-main-btn" onclick="openCheckout()">إتمام الطلب</button>
         <button class="btn-buy close-btn" onclick="toggleSidebar('cart-sidebar')">إغلاق</button>
     </div>
 
     <div id="checkout-sidebar" class="sidebar">
-        <h3>بيانات الشحن</h3><hr><br>
+        <h3>بيانات الشحن والتوصيل</h3><hr><br>
         <input type="text" id="cust-name" class="admin-input" placeholder="الاسم الكامل">
         <input type="tel" id="cust-phone" class="admin-input" placeholder="رقم الهاتف">
         
-        <label>الولاية:</label>
+        <label>الولاية المقصد:</label>
         <select id="wilaya-select" class="admin-input" onchange="calculateShipping()">
-            <option value="0" data-price="0">-- اختر الولاية --</option>
+            <option value="0" data-price="0">-- اختر ولايتك --</option>
             <option value="أدرار" data-price="800">01 - أدرار</option>
             <option value="الشلف" data-price="600">02 - الشلف</option>
             <option value="الأغواط" data-price="600">03 - الأغواط</option>
@@ -111,12 +128,12 @@
         </select>
 
         <div class="shipping-box">
-            <p>التوصيل: <span id="shipping-cost">0</span> د.ج</p>
-            <p><strong>الإجمالي: <span id="final-total">0</span> د.ج</strong></p>
+            <p>سعر التوصيل: <span id="shipping-cost">0</span> د.ج</p>
+            <p><strong>الإجمالي النهائي: <span id="final-total">0</span> د.ج</strong></p>
         </div>
         
-        <button class="btn-buy whatsapp-btn" onclick="confirmOrder()">تأكيد عبر واتساب <i class="fab fa-whatsapp"></i></button>
-        <button class="btn-buy close-btn" onclick="toggleSidebar('checkout-sidebar')">رجوع</button>
+        <button class="btn-buy whatsapp-btn" onclick="confirmOrder()">إرسال الطلب عبر واتساب <i class="fab fa-whatsapp"></i></button>
+        <button class="btn-buy close-btn" onclick="toggleSidebar('checkout-sidebar')">رجوع للمراجعة</button>
     </div>
 
     <footer class="main-footer">
