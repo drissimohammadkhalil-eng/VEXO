@@ -23,7 +23,7 @@
     </nav>
 
     <div class="container">
-        <div id="admin-panel" class="admin-section">
+        <div id="admin-panel" class="admin-section" style="display:none;">
             <h3>إضافة منتج جديد</h3>
             <input type="text" id="p-name" class="admin-input" placeholder="اسم المنتج">
             <input type="number" id="p-price" class="admin-input" placeholder="السعر">
@@ -31,7 +31,8 @@
             <button onclick="addNewProduct()" class="btn-buy" style="background:var(--primary)">حفظ المنتج</button>
         </div>
 
-        <div class="products-grid" id="main-products"></div>
+        <div class="products-grid" id="main-products">
+            </div>
     </div>
 
     <div id="cart-sidebar" class="sidebar">
