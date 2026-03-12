@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VEXO STORE | نظام الإدارة المتكامل</title>
+    <title>VEXO STORE | نظام الطلبات المطور</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
@@ -12,119 +12,97 @@
         body { background: #f1f5f9; color: var(--text); direction: rtl; }
 
         /* الواجهة الأمامية */
-        .lp-container { max-width: 600px; margin: auto; background: white; min-height: 100vh; padding-bottom: 150px; }
+        .lp-container { max-width: 600px; margin: auto; background: white; min-height: 100vh; padding-bottom: 150px; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
         .header { background: white; padding: 15px; text-align: center; border-bottom: 2px solid var(--main); position: sticky; top: 0; z-index: 1000; }
         .logo-img { max-height: 55px; display: block; margin: auto; }
         .product-img { width: 100%; height: auto; display: block; background: #eee; }
         .product-info { padding: 25px; }
         .price-tag { font-size: 32px; color: var(--main); font-weight: 900; margin-bottom: 20px; }
-        .price-tag span { font-size: 18px; color: #64748b; text-decoration: line-through; margin-right: 10px; }
-
-        /* تواصل معنا */
-        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 25px; }
-        .contact-card { background: #f8fafc; padding: 15px; border-radius: 12px; text-align: center; text-decoration: none; color: var(--text); border: 1px solid #e2e8f0; }
-        .contact-card i { display: block; font-size: 22px; margin-bottom: 5px; }
 
         /* أزرار الطلب */
         .footer-cta { position: fixed; bottom: 0; left: 0; width: 100%; background: white; padding: 15px; box-shadow: 0 -5px 15px rgba(0,0,0,0.1); text-align: center; z-index: 2000; }
-        .btn-buy { background: var(--accent); color: white; border: none; padding: 18px; border-radius: 50px; width: 95%; max-width: 500px; font-size: 22px; font-weight: 900; cursor: pointer; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
+        .btn-buy { background: var(--accent); color: white; border: none; padding: 18px; border-radius: 50px; width: 95%; max-width: 500px; font-size: 22px; font-weight: 900; cursor: pointer; }
 
-        /* لوحة التحكم (Admin Panel) */
+        /* لوحة التحكم */
         #admin-panel { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f1f5f9; z-index: 9999; padding: 20px; overflow-y: auto; }
         .admin-box { background: white; padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #ddd; }
-        .admin-box h3 { border-bottom: 2px solid var(--main); padding-bottom: 10px; margin-bottom: 15px; }
-        .order-card { background: #fff; padding: 12px; border-radius: 10px; margin-bottom: 10px; border-right: 6px solid #ccc; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .confirmed { border-right-color: var(--accent); background: #f0fdf4; }
+        .order-card { background: #fff; padding: 15px; border-radius: 10px; margin-bottom: 10px; border-right: 6px solid #2563eb; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: right; }
+        .order-card.confirmed { border-right-color: var(--accent); background: #f0fdf4; }
         
-        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; }
-        label { font-weight: bold; font-size: 14px; color: var(--main); }
-
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; text-align: right; }
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; z-index: 5000; align-items: center; justify-content: center; }
         .modal-content { background: white; width: 95%; max-width: 450px; border-radius: 25px; padding: 25px; }
-
-        #master-v { position: fixed; bottom: 100px; left: 10px; width: 30px; height: 30px; background: #ddd; opacity: 0.2; border-radius: 5px; z-index: 1500; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 10px; }
+        #master-v { position: fixed; bottom: 100px; left: 10px; width: 35px; height: 35px; background: #000; opacity: 0.1; border-radius: 5px; z-index: 1500; cursor: pointer; color: white; display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
 <body>
 
     <div class="lp-container">
         <header class="header">
-            <img id="view-logo" src="logo.png" class="logo-img" onerror="this.src='https://via.placeholder.com/200x60?text=VEXO+STORE'">
+            <img id="view-logo" src="logo.png" class="logo-img" onerror="this.src='https://via.placeholder.com/200x60?text=LOGO'">
         </header>
 
-        <img id="view-p-img" src="product.png" class="product-img" onerror="this.src='https://via.placeholder.com/600x600?text=Product+Image'">
+        <img id="view-p-img" src="product.png" class="product-img" onerror="this.src='https://via.placeholder.com/600x600?text=Product'">
 
         <div class="product-info">
-            <h1 id="view-p-title" style="font-size:26px; font-weight:900;">اسم المنتج الافتراضي</h1>
-            <div class="price-tag"><span id="view-p-price">0.00</span> د.ج <span id="view-p-old-price"></span></div>
-            
-            <div style="background:#f0fdf4; padding:15px; border-radius:12px; margin:20px 0;">
-                <p>✅ التوصيل لـ 58 ولاية متوفر</p>
-                <p>✅ الدفع عند الاستلام</p>
+            <h1 id="view-p-title" style="font-size:26px; font-weight:900;">تحميل...</h1>
+            <div class="price-tag"><span id="view-p-price">0</span> د.ج</div>
+            <div style="background:#f0fdf4; padding:15px; border-radius:12px; margin:20px 0; border: 1px solid #dcfce7;">
+                <p>✅ التوصيل السريع لـ 58 ولاية</p>
+                <p>✅ الدفع نقداً عند الاستلام</p>
             </div>
-        </div>
-
-        <div class="contact-grid">
-            <a href="tel:0555555555" id="view-phone" class="contact-card"><i class="fas fa-phone"></i> اتصل بنا</a>
-            <a href="https://wa.me/213555555555" id="view-whatsapp" class="contact-card"><i class="fab fa-whatsapp" style="color:green;"></i> واتساب</a>
         </div>
     </div>
 
     <div class="footer-cta">
-        <button class="btn-buy" onclick="document.getElementById('order-modal').style.display='flex'">اطلب الآن - اضغط هنا</button>
+        <button class="btn-buy" onclick="document.getElementById('order-modal').style.display='flex'">اطلب الآن - إضغط هنا</button>
     </div>
 
     <div id="admin-panel">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h2>⚙️ إدارة المتجر</h2>
-            <button onclick="document.getElementById('admin-panel').style.display='none'" style="background:var(--danger); color:white; border:none; padding:10px; border-radius:8px;">خروج</button>
+            <h2>📦 إدارة الطلبيات (<span id="orders-count">0</span>)</h2>
+            <button onclick="document.getElementById('admin-panel').style.display='none'" style="background:var(--danger); color:white; border:none; padding:10px 15px; border-radius:10px;">إغلاق</button>
         </div>
 
         <div class="admin-box">
-            <h3>🎨 تعديل الصور (من الجهاز)</h3>
-            <label>رفع اللوغو:</label>
-            <input type="file" accept="image/*" onchange="uploadImage(this, 'logo')">
-            
-            <label>رفع صورة المنتج:</label>
-            <input type="file" accept="image/*" onchange="uploadImage(this, 'pImg')">
-            
-            <label>اسم المنتج:</label>
-            <input type="text" id="set-title">
-            <label>السعر الحالي:</label>
-            <input type="text" id="set-price">
-            <button onclick="saveAdminSettings()" style="width:100%; background:var(--main); color:white; border:none; padding:12px; border-radius:10px; margin-top:10px;">حفظ التغييرات</button>
+            <h3>🎨 إعدادات المتجر</h3>
+            <label>تغيير اللوغو:</label> <input type="file" accept="image/*" onchange="uploadFile(this, 'logo')">
+            <label>صورة المنتج:</label> <input type="file" accept="image/*" onchange="uploadFile(this, 'pImg')">
+            <input type="text" id="set-title" placeholder="اسم المنتج">
+            <input type="text" id="set-price" placeholder="السعر">
+            <button onclick="saveSettings()" style="width:100%; background:var(--main); color:white; border:none; padding:12px; border-radius:10px;">حفظ التغييرات</button>
         </div>
 
-        <div class="admin-box">
-            <h3>📦 الطلبات المستلمة</h3>
-            <div id="admin-orders"></div>
-        </div>
+        <div id="admin-orders-list"></div>
+        <button onclick="clearAllOrders()" style="width:100%; background:#64748b; color:white; border:none; padding:10px; border-radius:10px; margin-top:20px;">مسح جميع الطلبات</button>
     </div>
 
     <div id="order-modal" class="modal">
         <div class="modal-content" id="modal-body">
-            <h2 style="text-align:center; margin-bottom:15px;">تأكيد الطلب</h2>
+            <h2 style="text-align:center; margin-bottom:15px;">تأكيد الطلبية</h2>
             <input type="text" id="c-name" placeholder="الاسم واللقب">
             <input type="tel" id="c-phone" placeholder="رقم الهاتف">
             <select id="c-wilaya">
-                <option value="" disabled selected>اختر الولاية (58)</option>
-                <option value="16- الجزائر العاصمة">16- الجزائر العاصمة</option>
-                <option value="19- سطيف">19- سطيف</option>
-                <option value="31- وهران">31- وهران</option>
+                <option value="" disabled selected>اختر الولاية</option>
+                <option value="الجزائر العاصمة">الجزائر العاصمة</option>
+                <option value="سطيف">سطيف</option>
+                <option value="وهران">وهران</option>
+                <option value="قسنطينة">قسنطينة</option>
                 </select>
-            <button onclick="submitOrder()" class="btn-buy" style="width:100%; margin-top:10px;">إرسال</button>
+            <button onclick="processNewOrder()" class="btn-buy" style="width:100%; margin-top:10px;">إرسال الطلب</button>
         </div>
     </div>
 
     <div id="master-v" onclick="openAdmin()">V</div>
 
     <script>
-        // تخزين الإعدادات
-        let settings = JSON.parse(localStorage.getItem('vexo_config')) || {
+        // 1. إدارة البيانات (الإصلاح الجذري هنا)
+        let settings = JSON.parse(localStorage.getItem('vexo_settings_v4')) || {
             logo: 'logo.png', pImg: 'product.png', title: 'هاتف ذكي احترافي', price: '30,000'
         };
-        let orders = JSON.parse(localStorage.getItem('vexo_orders_db')) || [];
+        
+        // جلب الطلبات والتأكد أنها مصفوفة (Array)
+        let orders = JSON.parse(localStorage.getItem('vexo_orders_v4')) || [];
 
         function updateUI() {
             document.getElementById('view-logo').src = settings.logo;
@@ -133,37 +111,37 @@
             document.getElementById('view-p-price').innerText = settings.price;
         }
 
-        function uploadImage(input, type) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                if(type === 'logo') settings.logo = e.target.result;
-                else settings.pImg = e.target.result;
-                localStorage.setItem('vexo_config', JSON.stringify(settings));
-                updateUI();
-                alert("تم تحديث الصورة!");
+        // 2. معالجة الطلبات الجديدة بدون مسح القديم
+        function processNewOrder() {
+            const name = document.getElementById('c-name').value;
+            const phone = document.getElementById('c-phone').value;
+            const wilaya = document.getElementById('c-wilaya').value;
+
+            if(!name || !phone || !wilaya) return alert("يرجى ملء كافة البيانات");
+
+            const newEntry = {
+                id: Date.now(),
+                name: name,
+                phone: phone,
+                wilaya: wilaya,
+                date: new Date().toLocaleString('ar-DZ'),
+                status: 'new'
             };
-            reader.readAsDataURL(input.files[0]);
+
+            // إضافة الطلب للمصفوفة وحفظها فوراً
+            orders.push(newEntry);
+            localStorage.setItem('vexo_orders_v4', JSON.stringify(orders));
+
+            document.getElementById('modal-body').innerHTML = `
+                <div style="text-align:center; padding:20px;">
+                    <i class="fas fa-check-circle" style="font-size:50px; color:var(--accent);"></i>
+                    <h2>تم استلام طلبك!</h2>
+                    <p>سنتصل بك قريباً للتأكيد.</p>
+                    <button onclick="location.reload()" class="btn-buy" style="margin-top:15px;">شكراً</button>
+                </div>`;
         }
 
-        function saveAdminSettings() {
-            settings.title = document.getElementById('set-title').value;
-            settings.price = document.getElementById('set-price').value;
-            localStorage.setItem('vexo_config', JSON.stringify(settings));
-            updateUI();
-            alert("تم حفظ البيانات!");
-        }
-
-        function submitOrder() {
-            const n = document.getElementById('c-name').value;
-            const p = document.getElementById('c-phone').value;
-            const w = document.getElementById('c-wilaya').value;
-            if(!n || !p || !w) return alert("أكمل البيانات");
-
-            orders.push({ id: Date.now(), name: n, phone: p, wilaya: w, status: 'new', date: new Date().toLocaleString('ar-DZ') });
-            localStorage.setItem('vexo_orders_db', JSON.stringify(orders));
-            document.getElementById('modal-body').innerHTML = "<div style='text-align:center;'><h2>شكراً لك!</h2><button onclick='location.reload()' class='btn-buy'>موافق</button></div>";
-        }
-
+        // 3. إدارة لوحة التحكم
         function openAdmin() {
             if(prompt("كلمة السر:") === "1234") {
                 document.getElementById('admin-panel').style.display = 'block';
@@ -174,29 +152,67 @@
         }
 
         function renderOrders() {
-            const container = document.getElementById('admin-orders');
-            container.innerHTML = orders.length === 0 ? '<p>لا توجد طلبيات</p>' : 
-            orders.slice().reverse().map(o => `
-                <div class="order-card ${o.status==='confirmed'?'confirmed':''}">
-                    <strong>${o.name}</strong> | ${o.phone}<br>📍 ${o.wilaya}<br>
-                    <button onclick="confirmOrder(${o.id})" style="background:var(--accent); color:white; border:none; padding:5px; margin-top:5px; border-radius:5px;">تأكيد</button>
-                    <button onclick="delOrder(${o.id})" style="background:var(--danger); color:white; border:none; padding:5px; margin-top:5px; border-radius:5px;">حذف</button>
+            const list = document.getElementById('admin-orders-list');
+            document.getElementById('orders-count').innerText = orders.length;
+            
+            if(orders.length === 0) {
+                list.innerHTML = '<p style="text-align:center; padding:20px;">لا توجد طلبيات حالياً</p>';
+                return;
+            }
+
+            list.innerHTML = orders.slice().reverse().map(o => `
+                <div class="order-card ${o.status === 'done' ? 'confirmed' : ''}">
+                    <strong>👤 ${o.name}</strong><br>
+                    📞 <a href="tel:${o.phone}">${o.phone}</a><br>
+                    📍 ولاية: ${o.wilaya}<br>
+                    📅 تاريخ: ${o.date}<br>
+                    <div style="margin-top:10px;">
+                        <button onclick="markOrderDone(${o.id})" style="background:var(--accent); color:white; border:none; padding:5px 10px; border-radius:5px;">تأكيد</button>
+                        <button onclick="deleteSingleOrder(${o.id})" style="background:var(--danger); color:white; border:none; padding:5px 10px; border-radius:5px;">حذف</button>
+                    </div>
                 </div>
             `).join('');
         }
 
-        function confirmOrder(id) {
-            orders = orders.map(o => o.id === id ? {...o, status: 'confirmed'} : o);
-            localStorage.setItem('vexo_orders_db', JSON.stringify(orders));
+        function markOrderDone(id) {
+            orders = orders.map(o => o.id === id ? {...o, status: 'done'} : o);
+            localStorage.setItem('vexo_orders_v4', JSON.stringify(orders));
             renderOrders();
         }
 
-        function delOrder(id) {
-            if(confirm("حذف؟")) {
+        function deleteSingleOrder(id) {
+            if(confirm("هل تريد حذف هذا الطلب؟")) {
                 orders = orders.filter(o => o.id !== id);
-                localStorage.setItem('vexo_orders_db', JSON.stringify(orders));
+                localStorage.setItem('vexo_orders_v4', JSON.stringify(orders));
                 renderOrders();
             }
+        }
+
+        function clearAllOrders() {
+            if(confirm("تحذير: سيتم مسح كل الطلبات نهائياً!")) {
+                orders = [];
+                localStorage.setItem('vexo_orders_v4', JSON.stringify(orders));
+                renderOrders();
+            }
+        }
+
+        function uploadFile(input, type) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                if(type === 'logo') settings.logo = e.target.result;
+                else settings.pImg = e.target.result;
+                localStorage.setItem('vexo_settings_v4', JSON.stringify(settings));
+                updateUI();
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+
+        function saveSettings() {
+            settings.title = document.getElementById('set-title').value;
+            settings.price = document.getElementById('set-price').value;
+            localStorage.setItem('vexo_settings_v4', JSON.stringify(settings));
+            updateUI();
+            alert("تم حفظ الإعدادات بنجاح!");
         }
 
         window.onload = updateUI;
