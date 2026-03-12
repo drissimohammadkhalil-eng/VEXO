@@ -3,154 +3,217 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VEXO Store | المتجر الرسمي</title>
+    <title>VEXO | لوحة التحكم الاحترافية</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #2563eb; --orange: #f97316; --bg: #f8fafc; }
+        :root { --primary: #2563eb; --secondary: #64748b; --success: #22c55e; --danger: #ef4444; --warning: #f59e0b; --bg: #f1f5f9; }
         * { box-sizing: border-box; font-family: 'Cairo', sans-serif; margin: 0; padding: 0; }
-        body { background: var(--bg); color: #1e293b; line-height: 1.6; }
+        body { background: var(--bg); color: #1e293b; overflow-x: hidden; }
 
-        /* Navbar */
-        .navbar { background: white; padding: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
-        .nav-flex { display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: auto; }
-        .logo { font-size: 26px; font-weight: 900; color: #1e293b; text-decoration: none; }
-        .logo span { color: var(--primary); }
+        /* Dashboard Sidebar Layout */
+        .admin-layout { display: flex; min-height: 100vh; display: none; }
+        .sidebar { width: 260px; background: #1e293b; color: white; padding: 20px; flex-shrink: 0; }
+        .sidebar-brand { font-size: 24px; font-weight: 900; margin-bottom: 30px; border-bottom: 1px solid #334155; padding-bottom: 10px; }
+        .menu-item { padding: 12px 15px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.3s; margin-bottom: 5px; }
+        .menu-item:hover, .menu-item.active { background: var(--primary); }
 
-        /* Admin Panel */
-        .admin-panel { background: #fffbeb; border: 2px dashed var(--orange); padding: 25px; border-radius: 20px; margin: 20px auto; max-width: 900px; display: none; }
-        .admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-        .admin-input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 10px; }
+        .main-content { flex-grow: 1; padding: 30px; background: var(--bg); height: 100vh; overflow-y: auto; }
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .card { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 20px; }
 
-        /* Hero Section */
-        .hero { background: white; padding: 50px 20px; text-align: center; border-bottom: 1px solid #edf2f7; }
-        .hero h1 { font-size: 36px; font-weight: 900; margin-bottom: 15px; }
-        .hero h1 span { color: var(--primary); }
-        .social-bar { margin-top: 20px; display: flex; justify-content: center; gap: 20px; }
-        .social-bar a { font-size: 24px; color: var(--primary); transition: 0.3s; }
+        /* Stats Grid */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 20px; border-radius: 12px; display: flex; align-items: center; gap: 15px; border-right: 5px solid var(--primary); }
+        .stat-val { font-size: 24px; font-weight: 900; }
 
-        /* Products Grid */
-        .container { max-width: 1100px; margin: auto; padding: 20px; }
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; margin-top: 30px; }
-        .product-card { background: white; border-radius: 20px; padding: 20px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.03); transition: 0.3s; border: 1px solid #f1f5f9; }
-        .product-card:hover { transform: translateY(-5px); }
-        .product-card img { width: 100%; height: 260px; object-fit: cover; border-radius: 15px; margin-bottom: 15px; }
-        .price-tag { color: var(--primary); font-weight: 900; font-size: 24px; margin: 10px 0; }
-        .btn-order { background: var(--primary); color: white; border: none; padding: 14px; border-radius: 12px; cursor: pointer; width: 100%; font-weight: bold; font-size: 16px; }
+        /* Table Design */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th { background: #f8fafc; text-align: right; padding: 12px; font-size: 14px; border-bottom: 2px solid #e2e8f0; }
+        td { padding: 12px; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
+        .status { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        .status-pending { background: #fef3c7; color: #92400e; }
 
-        /* Checkout Modal */
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; z-index: 2000; overflow-y: auto; backdrop-filter: blur(4px); }
-        .modal-content { background: white; width: 95%; max-width: 480px; margin: 30px auto; border-radius: 25px; padding: 30px; position: relative; }
-        .close-btn { position: absolute; top: 20px; left: 20px; font-size: 28px; cursor: pointer; color: #94a3b8; }
-        
-        .checkout-img { width: 140px; height: 140px; object-fit: cover; border-radius: 20px; margin: 0 auto 15px; display: block; border: 1px solid #f1f5f9; }
-        .qty-control { display: flex; align-items: center; justify-content: center; gap: 20px; margin: 20px 0; }
-        .qty-btn { width: 40px; height: 40px; border-radius: 10px; border: 1px solid #e2e8f0; background: white; cursor: pointer; font-size: 20px; }
-        
-        .input-group { margin-bottom: 15px; }
-        .input-group input, .input-group select { width: 100%; padding: 14px; border: 1px solid #e2e8f0; border-radius: 12px; background: #f8fafc; outline: none; }
-        .delivery-tabs { display: flex; gap: 12px; margin: 20px 0; }
-        .tab { flex: 1; padding: 12px; border: 1px solid #e2e8f0; border-radius: 12px; text-align: center; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        .tab.active { background: #eff6ff; border-color: var(--primary); color: var(--primary); }
+        /* Storefront Styles */
+        .store-view { display: block; }
+        .navbar { background: white; padding: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; padding: 20px; max-width: 1200px; margin: auto; }
+        .product-card { background: white; border-radius: 15px; padding: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .product-card img { width: 100%; height: 200px; object-fit: cover; border-radius: 10px; }
+        .btn-order { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; width: 100%; cursor: pointer; font-weight: bold; margin-top: 10px; }
 
-        .bill-summary { background: #f8fafc; padding: 20px; border-radius: 15px; margin-top: 20px; }
-        .bill-line { display: flex; justify-content: space-between; margin-bottom: 8px; font-weight: bold; }
-        .total-line { border-top: 2px dashed #e2e8f0; margin-top: 10px; padding-top: 10px; font-size: 20px; color: var(--orange); }
-        .confirm-btn { background: var(--orange); color: white; border: none; padding: 20px; border-radius: 15px; width: 100%; font-size: 18px; font-weight: 900; cursor: pointer; margin-top: 20px; box-shadow: 0 10px 20px rgba(249, 115, 22, 0.2); }
-
-        @media (max-width: 600px) { .admin-grid { grid-template-columns: 1fr; } }
+        /* Admin Trigger Button */
+        #admin-btn { position: fixed; bottom: 20px; left: 20px; opacity: 0.1; cursor: pointer; z-index: 9999; }
+        #admin-btn:hover { opacity: 1; }
     </style>
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="nav-flex">
-            <a href="#" class="logo" id="site-logo">VEXO<span>Store</span></a>
-            <div id="admin-trigger" style="width: 10px; height: 10px;"></div>
-        </div>
-    </nav>
-
-    <div class="container">
-        <div id="admin-panel" class="admin-panel">
-            <h3 style="margin-bottom: 20px;">⚙️ إعدادات المتجر الكاملة</h3>
-            <div class="admin-grid">
-                <div>
-                    <h4>المنتجات</h4>
-                    <input type="text" id="p-name" class="admin-input" placeholder="اسم المنتج">
-                    <input type="number" id="p-price" class="admin-input" placeholder="السعر">
-                    <input type="file" id="p-img" class="admin-input">
-                    <button onclick="addProduct()" class="btn-order">إضافة المنتج</button>
-                </div>
-                <div>
-                    <h4>الهوية والتواصل</h4>
-                    <input type="file" onchange="updateLogo(this)" class="admin-input">
-                    <input type="text" id="fb-link" class="admin-input" placeholder="رابط فيسبوك">
-                    <input type="text" id="ig-link" class="admin-input" placeholder="رابط انستغرام">
-                    <input type="color" id="theme-color" onchange="changeColor(this.value)" class="admin-input">
-                    <button onclick="saveSettings()" class="btn-order" style="background: var(--orange)">حفظ الإعدادات</button>
-                </div>
+    <div id="store-ui" class="store-view">
+        <nav class="navbar">
+            <div style="max-width:1200px; margin:auto; display:flex; justify-content:space-between; align-items:center;">
+                <div class="logo" style="font-size:24px; font-weight:900;">VEXO<span>Store</span></div>
+                <div id="social-nav"></div>
             </div>
-        </div>
-
-        <header class="hero">
-            <h1 id="hero-title">اكتشف الفخامة مع <span>VEXO</span></h1>
-            <p id="hero-desc">أفضل جودة، توصيل لـ 58 ولاية، ودفع عند الاستلام.</p>
-            <div class="social-bar" id="social-links"></div>
+        </nav>
+        <header style="text-align:center; padding:50px 20px; background:white;">
+            <h1 style="font-size:32px; font-weight:900;">تسوق أفضل المنتجات مع <span>VEXO</span></h1>
+            <p style="color:var(--secondary);">توصيل لكافة الولايات Algeria - الدفع عند الاستلام</p>
         </header>
-
-        <div class="products-grid" id="products-list"></div>
+        <div class="products-grid" id="store-products"></div>
     </div>
 
-    <div class="modal" id="order-modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">×</span>
-            <img src="" id="modal-img" class="checkout-img">
-            <h2 id="modal-name" style="text-align: center;"></h2>
-            
-            <div class="qty-control">
-                <button class="qty-btn" onclick="updateQty(-1)">-</button>
-                <span id="qty-count" style="font-weight: 900; font-size: 22px;">1</span>
-                <button class="qty-btn" onclick="updateQty(1)">+</button>
+    <div id="admin-ui" class="admin-layout">
+        <aside class="sidebar">
+            <div class="sidebar-brand">VEXO Control</div>
+            <div class="menu-item active" onclick="showTab('stats')"><i class="fas fa-chart-line"></i> الإحصائيات</div>
+            <div class="menu-item" onclick="showTab('products')"><i class="fas fa-box"></i> المنتجات</div>
+            <div class="menu-item" onclick="showTab('orders')"><i class="fas fa-shopping-cart"></i> الطلبات</div>
+            <div class="menu-item" onclick="showTab('customers')"><i class="fas fa-users"></i> العملاء</div>
+            <div class="menu-item" onclick="showTab('settings')"><i class="fas fa-cog"></i> الإعدادات</div>
+            <div class="menu-item" onclick="exitAdmin()" style="margin-top:50px; color:var(--danger);"><i class="fas fa-sign-out-alt"></i> الخروج</div>
+        </aside>
+
+        <main class="main-content">
+            <div id="tab-stats" class="admin-tab">
+                <div class="page-header"><h2>لوحة الإحصائيات</h2></div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-wallet fa-2x" style="color:var(--primary);"></i>
+                        <div><p>إجمالي المبيعات</p><div class="stat-val" id="stat-sales">0 د.ج</div></div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-shopping-bag fa-2x" style="color:var(--success);"></i>
+                        <div><p>عدد الطلبات</p><div class="stat-val" id="stat-orders-count">0</div></div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-user-friends fa-2x" style="color:var(--warning);"></i>
+                        <div><p>عدد العملاء</p><div class="stat-val" id="stat-cust-count">0</div></div>
+                    </div>
+                </div>
             </div>
 
-            <div class="input-group">
-                <input type="text" id="customer-name" placeholder="الاسم واللقب بالكامل">
-                <input type="tel" id="customer-phone" placeholder="رقم الهاتف">
-                <select id="wilaya-select" onchange="calculate()">
-                    <option value="0" data-home="0" data-office="0">-- اختر الولاية (58 ولاية) --</option>
-                </select>
+            <div id="tab-products" class="admin-tab" style="display:none;">
+                <div class="page-header">
+                    <h2>إدارة المنتجات</h2>
+                    <button class="btn-order" style="width:auto; padding:10px 20px;" onclick="document.getElementById('product-form').style.display='block'">+ إضافة منتج</button>
+                </div>
+                <div class="card" id="product-form" style="display:none;">
+                    <input type="text" id="p-name" placeholder="اسم المنتج" class="admin-input" style="width:100%; margin:10px 0; padding:10px;">
+                    <input type="number" id="p-price" placeholder="السعر" class="admin-input" style="width:100%; margin:10px 0; padding:10px;">
+                    <input type="number" id="p-stock" placeholder="الكمية المتوفرة (المخزون)" style="width:100%; margin:10px 0; padding:10px;">
+                    <input type="file" id="p-img" style="margin:10px 0;">
+                    <button onclick="saveNewProduct()" class="btn-order">حفظ المنتج</button>
+                </div>
+                <div class="card">
+                    <table id="products-table">
+                        <thead><tr><th>الصورة</th><th>الاسم</th><th>السعر</th><th>المخزون</th><th>تحكم</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
 
-            <div class="delivery-tabs">
-                <div class="tab active" id="tab-home" onclick="setDelivery('home')">🏠 للمنزل</div>
-                <div class="tab" id="tab-office" onclick="setDelivery('office')">🏢 للمكتب</div>
+            <div id="tab-orders" class="admin-tab" style="display:none;">
+                <div class="page-header"><h2>إدارة الطلبات</h2></div>
+                <div class="card">
+                    <table>
+                        <thead><tr><th>رقم الطلب</th><th>العميل</th><th>المنتج</th><th>الإجمالي</th><th>الحالة</th></tr></thead>
+                        <tbody id="orders-list-body"></tbody>
+                    </table>
+                </div>
             </div>
 
-            <div class="bill-summary">
-                <div class="bill-line"><span>سعر المنتج:</span> <span id="bill-product">0</span> د.ج</div>
-                <div class="bill-line"><span>التوصيل:</span> <span id="bill-shipping">0</span> د.ج</div>
-                <div class="bill-line total-line"><span>المجموع:</span> <span id="bill-total">0</span> د.ج</div>
-            </div>
-
-            <button class="confirm-btn" onclick="submitOrder()">تأكيد الطلب الآن ✅</button>
-        </div>
+            </main>
     </div>
+
+    <div id="admin-btn" onclick="checkAdmin()">🔑</div>
 
     <script>
-        // قاعدة بيانات الولايات
-        const wilayasData = [
-            {n:"أدرار",h:1000,o:800},{n:"الشلف",h:600,o:400},{n:"الأغواط",h:600,o:400},{n:"البليدة",h:400,o:200},{n:"الجزائر",h:400,o:200},{n:"سطيف",h:500,o:300},{n:"وهران",h:600,o:400},{n:"بومرداس",h:400,o:200},{n:"تيبازة",h:400,o:200},{n:"المنيعة",h:1000,o:800}
-            // أضف البقية هنا بنفس التنسيق
-        ];
-
-        let storeData = JSON.parse(localStorage.getItem('vexo_pro_db')) || {
-            products: [], logo: null, color: "#2563eb", fb: "", ig: ""
+        // داتابيز المتجر
+        let db = JSON.parse(localStorage.getItem('vexo_pro_v3')) || {
+            products: [], orders: [], customers: [], config: {fb:"", ig:"", color:"#2563eb"}
         };
 
-        let activeP = null;
-        let activeQty = 1;
-        let deliveryMode = 'home';
+        // وظيفة تسجيل الدخول
+        function checkAdmin() {
+            if(prompt("كلمة سر المدير:") === "1234") {
+                document.getElementById('store-ui').style.display = 'none';
+                document.getElementById('admin-ui').style.display = 'flex';
+                updateStats();
+                loadAdminProducts();
+                loadAdminOrders();
+            }
+        }
 
-        // الدخول السري (L)
-        window.onkeydown = (e) => {
-            if(e.key.toLowerCase() === 'l') {
+        function exitAdmin() {
+            document.getElementById('admin-ui').style.display = 'none';
+            document.getElementById('store-ui').style.display = 'block';
+            renderStore();
+        }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.admin-tab').forEach(t => t.style.display = 'none');
+            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+            document.getElementById('tab-' + tabName).style.display = 'block';
+            event.currentTarget.classList.add('active');
+        }
+
+        // إحصائيات حية
+        function updateStats() {
+            const totalSales = db.orders.reduce((sum, o) => sum + parseInt(o.total), 0);
+            document.getElementById('stat-sales').innerText = totalSales + " د.ج";
+            document.getElementById('stat-orders-count').innerText = db.orders.length;
+            document.getElementById('stat-cust-count').innerText = [...new Set(db.orders.map(o => o.phone))].length;
+        }
+
+        // إدارة المنتجات
+        function saveNewProduct() {
+            const n = document.getElementById('p-name').value;
+            const p = document.getElementById('p-price').value;
+            const s = document.getElementById('p-stock').value;
+            const f = document.getElementById('p-img').files[0];
+            if(n && p && f) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    db.products.push({id: Date.now(), name: n, price: p, stock: s, img: e.target.result});
+                    saveDB();
+                    loadAdminProducts();
+                    document.getElementById('product-form').style.display='none';
+                };
+                reader.readAsDataURL(f);
+            }
+        }
+
+        function loadAdminProducts() {
+            const tbody = document.querySelector('#products-table tbody');
+            tbody.innerHTML = db.products.map((p, i) => `
+                <tr>
+                    <td><img src="${p.img}" style="width:40px; height:40px; border-radius:5px;"></td>
+                    <td>${p.name}</td>
+                    <td>${p.price} د.ج</td>
+                    <td><span style="color:${p.stock < 5 ? 'red' : 'green'}">${p.stock}</span></td>
+                    <td><button onclick="deleteP(${i})" style="color:red; border:none; background:none; cursor:pointer;"><i class="fas fa-trash"></i></button></td>
+                </tr>
+            `).join('');
+        }
+
+        // عرض المتجر
+        function renderStore() {
+            const container = document.getElementById('store-products');
+            container.innerHTML = db.products.map((p, i) => `
+                <div class="product-card">
+                    <img src="${p.img}">
+                    <h3>${p.name}</h3>
+                    <div style="color:var(--primary); font-weight:900; margin:10px 0;">${p.price} د.ج</div>
+                    <button class="btn-order" onclick="alert('سيتم فتح نافذة الطلب التي صممناها سابقاً')">اطلب الآن</button>
+                </div>
+            `).join('');
+        }
+
+        function saveDB() { localStorage.setItem('vexo_pro_v3', JSON.stringify(db)); }
+        function deleteP(i) { db.products.splice(i,1); saveDB(); loadAdminProducts(); }
+
+        window.onload = renderStore;
+    </script>
+</body>
+</html>
