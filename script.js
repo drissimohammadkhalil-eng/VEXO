@@ -5,25 +5,37 @@ let products = JSON.parse(localStorage.getItem('vexo_products')) || [
 ];
 
 let cart = [];
+let isAdmin = false; // متغير لمعرفة هل المستخدم مدير أم لا
 
 // 1. عرض المنتجات في الصفحة
 function renderProducts() {
     const mainContainer = document.getElementById('main-products');
     if(!mainContainer) return;
     
-    mainContainer.innerHTML = products.map(p => `
+    mainContainer.innerHTML = products.map((p, index) => `
         <div class="product-card">
             <img src="${p.img}" onerror="this.src='https://via.placeholder.com/250'">
             <div class="product-info">
                 <h3>${p.name}</h3>
                 <p class="price">${p.price.toLocaleString()} د.ج</p>
                 <button class="btn-buy" onclick="addToCart('${p.name}', ${p.price})">إضافة للسلة</button>
+                
+                ${isAdmin ? `<button onclick="deleteProduct(${index})" style="background:#ff4d4d; margin-top:10px; font-size:12px;" class="btn-buy">حذف المنتج <i class="fas fa-trash"></i></button>` : ''}
             </div>
         </div>
     `).join('');
 }
 
-// 2. إدارة السلة والقوائم
+// 2. وظيفة حذف منتج
+function deleteProduct(index) {
+    if(confirm("هل أنت متأكد من حذف هذا المنتج نهائياً؟")) {
+        products.splice(index, 1); // إزالة المنتج من المصفوفة
+        localStorage.setItem('vexo_products', JSON.stringify(products)); // تحديث الذاكرة
+        renderProducts(); // إعادة عرض المنتجات
+    }
+}
+
+// 3. إدارة السلة والقوائم
 function toggleSidebar(id) {
     const sidebar = document.getElementById(id);
     if(sidebar) sidebar.classList.toggle('active');
@@ -56,7 +68,7 @@ function removeItem(index) {
     document.getElementById('cart-count').innerText = cart.length;
 }
 
-// 3. نظام الشحن وحساب المجموع النهائي
+// 4. نظام الشحن وحساب المجموع
 function openCheckout() {
     if(cart.length === 0) return alert("السلة فارغة!");
     toggleSidebar('cart-sidebar');
@@ -73,7 +85,7 @@ function calculateShipping() {
     document.getElementById('final-total').innerText = (subtotal + shipCost).toLocaleString();
 }
 
-// 4. تأكيد الطلب عبر واتساب
+// 5. تأكيد الطلب عبر واتساب
 function confirmOrder() {
     const name = document.getElementById('cust-name').value;
     const phone = document.getElementById('cust-phone').value;
@@ -85,15 +97,17 @@ function confirmOrder() {
     let message = `*طلب جديد من متجر VEXO*\n\n`;
     message += `*الاسم:* ${name}\n*الهاتف:* ${phone}\n*الولاية:* ${wilaya}\n\n`;
     message += `*المنتجات:*\n` + cart.map(i => `- ${i.name}`).join('\n');
-    message += `\n\n*الإجمالي النهائي (مع التوصيل):* ${total} د.ج`;
+    message += `\n\n*الإجمالي النهائي:* ${total} د.ج`;
 
     window.open(`https://wa.me/213779310866?text=${encodeURIComponent(message)}`);
 }
 
-// 5. لوحة الإدارة وحفظ البيانات الدائم
+// 6. لوحة الإدارة
 function loginAdmin() {
     if(prompt("كلمة مرور الإدارة:") === "1234") {
+        isAdmin = true; // تفعيل وضع المدير
         document.getElementById('admin-panel').style.display = 'block';
+        renderProducts(); // إعادة العرض لإظهار أزرار الحذف
     }
 }
 
@@ -103,16 +117,10 @@ function addNewProduct() {
     const img = document.getElementById('p-img').value;
 
     if(name && price) {
-        // إضافة المنتج للمصفوفة
         products.push({id: Date.now(), name, price, img});
-        
-        // حفظ المصفوفة الجديدة في ذاكرة المتصفح
         localStorage.setItem('vexo_products', JSON.stringify(products));
-        
         renderProducts();
-        alert("تم حفظ المنتج بنجاح في متجرك!");
-        
-        // تنظيف الخانات
+        alert("تمت الإضافة!");
         document.getElementById('p-name').value = "";
         document.getElementById('p-price').value = "";
         document.getElementById('p-img').value = "";
