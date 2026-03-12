@@ -1,12 +1,12 @@
-// مصفوفة المنتجات الأساسية
-let products = [
+// تحميل المنتجات من ذاكرة المتصفح أو استخدام المنتجات الافتراضية
+let products = JSON.parse(localStorage.getItem('vexo_products')) || [
     { id: 1, name: "ساعة Luxury Silver", price: 12500, img: "images/p1.jpg" },
     { id: 2, name: "حذاء Premium Sport", price: 8500, img: "images/p2.jpg" }
 ];
 
 let cart = [];
 
-// 1. عرض المنتجات عند تحميل الصفحة
+// 1. عرض المنتجات في الصفحة
 function renderProducts() {
     const mainContainer = document.getElementById('main-products');
     if(!mainContainer) return;
@@ -23,25 +23,22 @@ function renderProducts() {
     `).join('');
 }
 
-// 2. التحكم في فتح وإغلاق القوائم الجانبية
+// 2. إدارة السلة والقوائم
 function toggleSidebar(id) {
     const sidebar = document.getElementById(id);
     if(sidebar) sidebar.classList.toggle('active');
 }
 
-// 3. إضافة منتج للسلة وتحديث الرقم
 function addToCart(name, price) {
     cart.push({name, price});
     document.getElementById('cart-count').innerText = cart.length;
     updateCartUI();
-    toggleSidebar('cart-sidebar'); // فتح السلة تلقائياً
+    toggleSidebar('cart-sidebar');
 }
 
-// 4. تحديث شكل السلة من الداخل
 function updateCartUI() {
     const itemsContainer = document.getElementById('cart-items');
     const totalLabel = document.getElementById('cart-total');
-    
     let total = cart.reduce((sum, item) => sum + item.price, 0);
     totalLabel.innerText = total.toLocaleString();
     
@@ -59,7 +56,7 @@ function removeItem(index) {
     document.getElementById('cart-count').innerText = cart.length;
 }
 
-// 5. نظام الشحن والولايات
+// 3. نظام الشحن وحساب المجموع النهائي
 function openCheckout() {
     if(cart.length === 0) return alert("السلة فارغة!");
     toggleSidebar('cart-sidebar');
@@ -76,7 +73,7 @@ function calculateShipping() {
     document.getElementById('final-total').innerText = (subtotal + shipCost).toLocaleString();
 }
 
-// 6. إرسال الطلب النهائي للواتساب
+// 4. تأكيد الطلب عبر واتساب
 function confirmOrder() {
     const name = document.getElementById('cust-name').value;
     const phone = document.getElementById('cust-phone').value;
@@ -88,18 +85,15 @@ function confirmOrder() {
     let message = `*طلب جديد من متجر VEXO*\n\n`;
     message += `*الاسم:* ${name}\n*الهاتف:* ${phone}\n*الولاية:* ${wilaya}\n\n`;
     message += `*المنتجات:*\n` + cart.map(i => `- ${i.name}`).join('\n');
-    message += `\n\n*الإجمالي النهائي:* ${total} د.ج`;
+    message += `\n\n*الإجمالي النهائي (مع التوصيل):* ${total} د.ج`;
 
     window.open(`https://wa.me/213779310866?text=${encodeURIComponent(message)}`);
 }
 
-// 7. لوحة الإدارة
+// 5. لوحة الإدارة وحفظ البيانات الدائم
 function loginAdmin() {
-    let pass = prompt("كلمة مرور الإدارة:");
-    if(pass === "1234") {
+    if(prompt("كلمة مرور الإدارة:") === "1234") {
         document.getElementById('admin-panel').style.display = 'block';
-    } else {
-        alert("كلمة مرور خاطئة!");
     }
 }
 
@@ -107,12 +101,22 @@ function addNewProduct() {
     const name = document.getElementById('p-name').value;
     const price = parseInt(document.getElementById('p-price').value);
     const img = document.getElementById('p-img').value;
+
     if(name && price) {
+        // إضافة المنتج للمصفوفة
         products.push({id: Date.now(), name, price, img});
+        
+        // حفظ المصفوفة الجديدة في ذاكرة المتصفح
+        localStorage.setItem('vexo_products', JSON.stringify(products));
+        
         renderProducts();
-        alert("تمت الإضافة!");
+        alert("تم حفظ المنتج بنجاح في متجرك!");
+        
+        // تنظيف الخانات
+        document.getElementById('p-name').value = "";
+        document.getElementById('p-price').value = "";
+        document.getElementById('p-img').value = "";
     }
 }
 
-// تشغيل الوظائف عند فتح الموقع
 window.onload = renderProducts;
