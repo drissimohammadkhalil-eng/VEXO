@@ -1,13 +1,16 @@
+// مصفوفة المنتجات الأساسية
 let products = [
     { id: 1, name: "ساعة Luxury Silver", price: 12500, img: "images/p1.jpg" },
     { id: 2, name: "حذاء Premium Sport", price: 8500, img: "images/p2.jpg" }
 ];
+
 let cart = [];
 
-// عرض المنتجات في الصفحة
+// 1. عرض المنتجات عند تحميل الصفحة
 function renderProducts() {
     const mainContainer = document.getElementById('main-products');
     if(!mainContainer) return;
+    
     mainContainer.innerHTML = products.map(p => `
         <div class="product-card">
             <img src="${p.img}" onerror="this.src='https://via.placeholder.com/250'">
@@ -20,40 +23,45 @@ function renderProducts() {
     `).join('');
 }
 
-// فتح وإغلاق القوائم الجانبية
+// 2. التحكم في فتح وإغلاق القوائم الجانبية
 function toggleSidebar(id) {
-    document.getElementById(id).classList.toggle('active');
+    const sidebar = document.getElementById(id);
+    if(sidebar) sidebar.classList.toggle('active');
 }
 
-// إضافة منتج للسلة
-function addToCart(n, p) {
-    cart.push({n, p});
+// 3. إضافة منتج للسلة وتحديث الرقم
+function addToCart(name, price) {
+    cart.push({name, price});
     document.getElementById('cart-count').innerText = cart.length;
     updateCartUI();
-    toggleSidebar('cart-sidebar');
+    toggleSidebar('cart-sidebar'); // فتح السلة تلقائياً
 }
 
-// تحديث واجهة السلة
+// 4. تحديث شكل السلة من الداخل
 function updateCartUI() {
-    let total = cart.reduce((sum, item) => sum + item.p, 0);
-    document.getElementById('cart-total').innerText = total.toLocaleString();
-    document.getElementById('cart-items').innerHTML = cart.map((item, i) => `
+    const itemsContainer = document.getElementById('cart-items');
+    const totalLabel = document.getElementById('cart-total');
+    
+    let total = cart.reduce((sum, item) => sum + item.price, 0);
+    totalLabel.innerText = total.toLocaleString();
+    
+    itemsContainer.innerHTML = cart.map((item, index) => `
         <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom:1px solid #eee; padding-bottom:5px;">
-            <span>${item.n}</span>
-            <b style="color:red; cursor:pointer;" onclick="removeItem(${i})">×</b>
+            <span>${item.name}</span>
+            <b style="color:red; cursor:pointer;" onclick="removeItem(${index})">×</b>
         </div>
     `).join('');
 }
 
-function removeItem(i) {
-    cart.splice(i, 1);
+function removeItem(index) {
+    cart.splice(index, 1);
     updateCartUI();
     document.getElementById('cart-count').innerText = cart.length;
 }
 
-// نظام الولايات
+// 5. نظام الشحن والولايات
 function openCheckout() {
-    if(cart.length === 0) return alert("السلة فارغة");
+    if(cart.length === 0) return alert("السلة فارغة!");
     toggleSidebar('cart-sidebar');
     toggleSidebar('checkout-sidebar');
     calculateShipping();
@@ -61,39 +69,37 @@ function openCheckout() {
 
 function calculateShipping() {
     const select = document.getElementById('wilaya-select');
-    const ship = parseInt(select.options[select.selectedIndex].getAttribute('data-price')) || 0;
-    const sub = cart.reduce((sum, item) => sum + item.p, 0);
-    document.getElementById('shipping-cost').innerText = ship;
-    document.getElementById('final-total').innerText = (sub + ship).toLocaleString();
+    const shipCost = parseInt(select.options[select.selectedIndex].getAttribute('data-price')) || 0;
+    const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
+    
+    document.getElementById('shipping-cost').innerText = shipCost;
+    document.getElementById('final-total').innerText = (subtotal + shipCost).toLocaleString();
 }
 
-// إرسال الطلب عبر واتساب
+// 6. إرسال الطلب النهائي للواتساب
 function confirmOrder() {
     const name = document.getElementById('cust-name').value;
     const phone = document.getElementById('cust-phone').value;
     const wilaya = document.getElementById('wilaya-select').value;
     const total = document.getElementById('final-total').innerText;
 
-    if(!name || !phone || wilaya === "0") return alert("يرجى ملء كافة البيانات");
+    if(!name || !phone || wilaya === "0") return alert("يرجى إكمال بياناتك");
 
-    let msg = `*طلب جديد من متجر VEXO*\n\n`;
-    msg += `*الاسم:* ${name}\n`;
-    msg += `*الهاتف:* ${phone}\n`;
-    msg += `*الولاية:* ${wilaya}\n\n`;
-    msg += `*المنتجات:* \n`;
-    cart.forEach(item => msg += `- ${item.n}\n`);
-    msg += `\n*الإجمالي النهائي:* ${total} د.ج`;
+    let message = `*طلب جديد من متجر VEXO*\n\n`;
+    message += `*الاسم:* ${name}\n*الهاتف:* ${phone}\n*الولاية:* ${wilaya}\n\n`;
+    message += `*المنتجات:*\n` + cart.map(i => `- ${i.name}`).join('\n');
+    message += `\n\n*الإجمالي النهائي:* ${total} د.ج`;
 
-    window.open(`https://wa.me/213779310866?text=${encodeURIComponent(msg)}`);
+    window.open(`https://wa.me/213779310866?text=${encodeURIComponent(message)}`);
 }
 
-// نظام الإدارة
+// 7. لوحة الإدارة
 function loginAdmin() {
     let pass = prompt("كلمة مرور الإدارة:");
     if(pass === "1234") {
         document.getElementById('admin-panel').style.display = 'block';
     } else {
-        alert("كلمة مرور خاطئة");
+        alert("كلمة مرور خاطئة!");
     }
 }
 
@@ -104,9 +110,9 @@ function addNewProduct() {
     if(name && price) {
         products.push({id: Date.now(), name, price, img});
         renderProducts();
-        alert("تمت إضافة المنتج بنجاح!");
+        alert("تمت الإضافة!");
     }
 }
 
-// تشغيل عند التحميل
+// تشغيل الوظائف عند فتح الموقع
 window.onload = renderProducts;
