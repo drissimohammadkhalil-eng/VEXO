@@ -3,37 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VEXO PRO | إدارة الطلبات</title>
+    <title>VEXO PRO | متجر الجزائر المتكامل</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --main: #2563eb; --orange: #f97316; --bg: #f8fafc; }
+        :root { --main: #2563eb; --bg: #f8fafc; --text: #1e293b; }
         * { box-sizing: border-box; font-family: 'Cairo', sans-serif; margin: 0; padding: 0; }
-        body { background: var(--bg); color: #1e293b; direction: rtl; }
+        body { background: var(--bg); color: var(--text); direction: rtl; }
 
         /* Navbar */
-        .navbar { background: white; padding: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
+        .navbar { background: white; padding: 15px 5%; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
         .logo { font-size: 26px; font-weight: 900; color: var(--main); }
 
-        /* Store */
+        /* Storefront */
         .container { max-width: 1100px; margin: auto; padding: 20px; }
         .hero { text-align: center; padding: 40px; background: white; border-radius: 20px; margin-bottom: 30px; border: 1px solid #e2e8f0; }
         .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-        .card { background: white; border-radius: 20px; padding: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid #f1f5f9; }
-        .card img { width: 100%; height: 230px; object-fit: cover; border-radius: 15px; }
-        .btn-order { background: var(--main); color: white; border: none; padding: 12px; border-radius: 12px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 10px; }
+        .card { background: white; border-radius: 20px; padding: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid #f1f5f9; transition: 0.3s; }
+        .card:hover { transform: translateY(-5px); }
+        .card img { width: 100%; height: 250px; object-fit: cover; border-radius: 15px; background: #eee; }
+        .btn-order { background: var(--main); color: white; border: none; padding: 12px; border-radius: 12px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 10px; font-size: 16px; }
 
         /* Admin UI */
         #admin-panel { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f1f5f9; z-index: 9999; overflow-y: auto; padding: 20px; }
-        .admin-box { background: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; }
+        .admin-box { background: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .order-card { background: #fff; padding: 15px; border-radius: 10px; margin-bottom: 10px; border-right: 5px solid var(--main); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; font-size: 16px; }
+
         /* Modal */
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 5000; align-items: center; justify-content: center; }
-        .modal-content { background: white; width: 90%; max-width: 450px; border-radius: 25px; padding: 25px; text-align: center; }
-        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; }
+        .modal-content { background: white; width: 90%; max-width: 450px; border-radius: 25px; padding: 25px; text-align: center; position: relative; }
         
-        #master-v { position: fixed; bottom: 10px; left: 10px; width: 30px; height: 30px; background: #ddd; color: #999; border-radius: 5px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 8888; opacity: 0.5; font-size: 12px; }
+        #master-v { position: fixed; bottom: 10px; left: 10px; width: 35px; height: 35px; background: #ddd; color: #999; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 8888; opacity: 0.5; font-size: 14px; border: 1px solid #ccc; }
     </style>
 </head>
 <body>
@@ -41,19 +42,51 @@
     <div id="store-view">
         <nav class="navbar"><div class="logo">VEXO<span>PRO</span></div></nav>
         <div class="container">
-            <div class="hero"><h1>متجر VEXO الرسمي</h1><p>توصيل لـ 58 ولاية - دفع عند الاستلام</p></div>
+            <div class="hero">
+                <h1>متجر VEXO الرسمي</h1>
+                <p>توصيل سريع لـ 58 ولاية - الدفع عند الاستلام 🇩🇿</p>
+            </div>
             <div id="main-list" class="products-grid"></div>
         </div>
     </div>
 
     <div id="order-modal" class="modal">
         <div class="modal-content" id="modal-body">
-            <h3 id="p-name-display">تأكيد الطلب</h3>
-            <input type="text" id="c-name" placeholder="الاسم الكامل">
+            <h3 id="p-name-display" style="margin-bottom:15px;">تأكيد الطلب</h3>
+            <input type="text" id="c-name" placeholder="الاسم واللقب بالكامل">
             <input type="tel" id="c-phone" placeholder="رقم الهاتف">
             <select id="c-wilaya">
-                <option value="الجزائر">الجزائر</option><option value="وهران">وهران</option><option value="سطيف">سطيف</option>
-                </select>
+                <option value="" disabled selected>اختر ولايتك (58 ولاية)</option>
+                <option value="01- أدرار">01- أدرار</option><option value="02- الشلف">02- الشلف</option>
+                <option value="03- الأغواط">03- الأغواط</option><option value="04- أم البواقي">04- أم البواقي</option>
+                <option value="05- باتنة">05- باتنة</option><option value="06- بجاية">06- بجاية</option>
+                <option value="07- بسكرة">07- بسكرة</option><option value="08- بشار">08- بشار</option>
+                <option value="09- البليدة">09- البليدة</option><option value="10- البويرة">10- البويرة</option>
+                <option value="11- تمنراست">11- تمنراست</option><option value="12- تبسة">12- تبسة</option>
+                <option value="13- تلمسان">13- تلمسان</option><option value="14- تيارت">14- تيارت</option>
+                <option value="15- تيزي وزو">15- تيزي وزو</option><option value="16- الجزائر العاصمة">16- الجزائر العاصمة</option>
+                <option value="17- الجلفة">17- الجلفة</option><option value="18- جيجل">18- جيجل</option>
+                <option value="19- سطيف">19- سطيف</option><option value="20- سعيدة">20- سعيدة</option>
+                <option value="21- سكيكدة">21- سكيكدة</option><option value="22- سيدي بلعباس">22- سيدي بلعباس</option>
+                <option value="23- عنابة">23- عنابة</option><option value="24- قالمة">24- قالمة</option>
+                <option value="25- قسنطينة">25- قسنطينة</option><option value="26- المدية">26- المدية</option>
+                <option value="27- مستغانم">27- مستغانم</option><option value="28- المسيلة">28- المسيلة</option>
+                <option value="29- معسكر">29- معسكر</option><option value="30- ورقلة">30- ورقلة</option>
+                <option value="31- وهران">31- وهران</option><option value="32- البيض">32- البيض</option>
+                <option value="33- إليزي">33- إليزي</option><option value="34- برج بوعريريج">34- برج بوعريريج</option>
+                <option value="35- بومرداس">35- بومرداس</option><option value="36- الطارف">36- الطارف</option>
+                <option value="37- تندوف">37- تندوف</option><option value="38- تيسمسيلت">38- تيسمسيلت</option>
+                <option value="39- الوادي">39- الوادي</option><option value="40- خنشلة">40- خنشلة</option>
+                <option value="41- سوق أهراس">41- سوق أهراس</option><option value="42- تيبازة">42- تيبازة</option>
+                <option value="43- ميلة">43- ميلة</option><option value="44- عين الدفلى">44- عين الدفلى</option>
+                <option value="45- النعامة">45- النعامة</option><option value="46- عين تموشنت">46- عين تموشنت</option>
+                <option value="47- غرداية">47- غرداية</option><option value="48- غليزان">48- غليزان</option>
+                <option value="49- تيميمون">49- تيميمون</option><option value="50- برج باجي مختار">50- برج باجي مختار</option>
+                <option value="51- أولاد جلال">51- أولاد جلال</option><option value="52- بني عباس">52- بني عباس</option>
+                <option value="53- عين صالح">53- عين صالح</option><option value="54- عين قزام">54- عين قزام</option>
+                <option value="55- تقرت">55- تقرت</option><option value="56- جنايت">56- جنايت</option>
+                <option value="57- المغير">57- المغير</option><option value="58- المنيعة">58- المنيعة</option>
+            </select>
             <button onclick="submitOrder()" class="btn-order" style="background:#22c55e; font-size:18px;">تأكيد الطلب الآن ✅</button>
             <button onclick="closeModal()" style="background:none; border:none; color:gray; margin-top:10px; cursor:pointer;">إلغاء</button>
         </div>
@@ -61,28 +94,28 @@
 
     <div id="admin-panel">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h2>⚙️ إدارة المتجر والطلبات</h2>
-            <button onclick="document.getElementById('admin-panel').style.display='none'" style="background:red; color:white; border:none; padding:10px; border-radius:8px;">خروج</button>
+            <h2>⚙️ إدارة المتجر</h2>
+            <button onclick="document.getElementById('admin-panel').style.display='none'" style="background:red; color:white; border:none; padding:10px 20px; border-radius:10px;">خروج</button>
         </div>
 
         <div class="admin-box">
-            <h3>📥 الطلبات الواردة</h3>
+            <h3>📥 الطلبات الجديدة</h3>
             <div id="orders-list"></div>
         </div>
 
         <div class="admin-box">
             <h3>➕ إضافة منتج</h3>
             <input type="text" id="new-p-n" placeholder="اسم المنتج">
-            <input type="number" id="new-p-p" placeholder="السعر">
+            <input type="number" id="new-p-p" placeholder="السعر د.ج">
             <input type="file" id="new-p-i">
-            <button onclick="addNewProduct()" style="background:green; color:white; border:none; padding:15px; width:100%; border-radius:10px; font-weight:bold;">نشر المنتج</button>
+            <button onclick="addNewProduct()" style="background:green; color:white; border:none; padding:15px; width:100%; border-radius:10px; font-weight:bold; cursor:pointer;">نشر المنتج</button>
         </div>
     </div>
 
     <div id="master-v" onclick="openAdmin()">V</div>
 
     <script>
-        let db = JSON.parse(localStorage.getItem('vexo_db_v12')) || { products: [], orders: [] };
+        let db = JSON.parse(localStorage.getItem('vexo_db_vFinal')) || { products: [], orders: [] };
         let activeP = null;
 
         function openAdmin() {
@@ -98,7 +131,7 @@
                 <div class="card">
                     <img src="${p.img}">
                     <h3>${p.name}</h3>
-                    <div style="color:var(--main); font-weight:900; margin:10px 0;">${p.price} د.ج</div>
+                    <div style="color:var(--main); font-weight:900; margin:10px 0; font-size:22px;">${p.price} د.ج</div>
                     <button class="btn-order" onclick="openModal(${i})">اطلب الآن</button>
                 </div>
             `).join('');
@@ -115,9 +148,8 @@
             const phone = document.getElementById('c-phone').value;
             const wilaya = document.getElementById('c-wilaya').value;
 
-            if(!name || !phone) return alert("أكمل بياناتك");
+            if(!name || !phone || !wilaya) return alert("يرجى إكمال كافة البيانات");
 
-            // حفظ الطلب في المصفوفة
             db.orders.push({
                 product: activeP.name,
                 name: name,
@@ -127,26 +159,26 @@
             });
             save();
 
-            // إظهار رسالة النجاح للزبون دون تحويله
             document.getElementById('modal-body').innerHTML = `
                 <div style="padding:20px;">
-                    <i class="fas fa-check-circle" style="font-size:50px; color:#22c55e;"></i>
-                    <h2 style="margin-top:15px;">تم استلام طلبك!</h2>
-                    <p>شكراً لك ${name}، سنتصل بك قريباً لتأكيد الشحن.</p>
-                    <button onclick="location.reload()" class="btn-order">العودة للمتجر</button>
+                    <i class="fas fa-check-circle" style="font-size:60px; color:#22c55e;"></i>
+                    <h2 style="margin-top:20px;">تم استلام طلبك!</h2>
+                    <p style="color:gray; margin-top:10px;">شكراً لك ${name}، سنتصل بك قريباً لتأكيد الشحن إلى ${wilaya}.</p>
+                    <button onclick="location.reload()" class="btn-order" style="margin-top:20px;">العودة للمتجر</button>
                 </div>
             `;
         }
 
         function renderAdmin() {
             const oList = document.getElementById('orders-list');
-            oList.innerHTML = db.orders.length === 0 ? '<p>لا توجد طلبات بعد.</p>' : 
+            oList.innerHTML = db.orders.length === 0 ? '<p style="text-align:center; color:gray;">لا توجد طلبات حالياً.</p>' : 
             db.orders.map((o, i) => `
                 <div class="order-card">
                     <strong>📦 المنتج: ${o.product}</strong><br>
                     👤 الزبون: ${o.name} | 📞 ${o.phone}<br>
-                    📍 الولاية: ${o.wilaya} | 🕒 ${o.time}<br>
-                    <button onclick="deleteOrder(${i})" style="color:red; background:none; border:none; cursor:pointer; font-size:12px;">حذف الطلب</button>
+                    📍 الولاية: ${o.wilaya}<br>
+                    🕒 التاريخ: ${o.time}<br>
+                    <button onclick="deleteOrder(${i})" style="color:red; background:none; border:none; cursor:pointer; font-size:12px; margin-top:10px;">حذف الطلب</button>
                 </div>
             `).reverse().join('');
         }
@@ -165,9 +197,9 @@
             }
         }
 
-        function deleteOrder(i) { if(confirm("حذف الطلب؟")) { db.orders.splice(i,1); save(); renderAdmin(); } }
+        function deleteOrder(i) { if(confirm("حذف هذا الطلب؟")) { db.orders.splice(i,1); save(); renderAdmin(); } }
         function closeModal() { document.getElementById('order-modal').style.display = 'none'; }
-        function save() { localStorage.setItem('vexo_db_v12', JSON.stringify(db)); }
+        function save() { localStorage.setItem('vexo_db_vFinal', JSON.stringify(db)); }
 
         window.onload = renderStore;
     </script>
