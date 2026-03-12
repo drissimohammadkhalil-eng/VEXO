@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VEXO | المتجر الاحترافي</title>
+    <title>VEXO | متجر احترافي</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -12,44 +12,49 @@
     <nav class="navbar">
         <div class="container nav-flex">
             <div class="logo" id="site-logo-container">VEXO<span>Store</span></div>
-            <button onclick="loginAdmin()" class="admin-lock-btn"><i class="fas fa-lock"></i> الإدارة</button>
+            <button id="admin-trigger" onclick="loginAdmin()" style="opacity: 0; cursor: default; position: absolute;">Admin</button>
         </div>
     </nav>
 
-    <header class="hero-section" id="hero-area">
+    <header class="hero-section">
         <div class="container hero-flex">
             <div class="hero-content">
-                <h1>اكتشف الفخامة مع <span>VEXO</span></h1>
-                <p>توصيل سريع لكافة الولايات الجزائرية وضمان الجودة على كل منتج.</p>
+                <h1 id="hero-title">اكتشف الفخامة مع <span>VEXO</span></h1>
+                <p id="hero-desc">توصيل سريع لـ 58 ولاية وضمان الجودة على كافة المنتجات.</p>
                 <div class="hero-btns">
                     <a href="#main-products" class="btn-primary">تسوق الآن</a>
+                    <div class="social-links" id="social-container">
+                        </div>
                 </div>
             </div>
-            <div class="hero-image">
-                <img src="https://via.placeholder.com/500x400?text=VEXO+PREMIUM" id="main-hero-img">
-            </div>
+            <div class="hero-image"><img src="https://via.placeholder.com/500x400" id="main-hero-img"></div>
         </div>
     </header>
 
     <div class="container">
         <div id="admin-panel" class="admin-section" style="display:none;">
-            <h3 style="color:var(--primary); border-bottom:2px solid #eee; padding-bottom:10px;">إدارة الموقع والمنتجات</h3>
-            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px; margin-top:15px;">
-                <div>
-                    <label>تغيير اللوغو:</label>
-                    <input type="file" id="upload-logo" class="admin-input" accept="image/*" onchange="updateSiteAsset('logo')">
+            <h3>🛠️ إعدادات المتجر الاحترافي</h3>
+            <div class="admin-grid">
+                <div class="admin-col">
+                    <h4>الهوية والألوان</h4>
+                    <label>اللوغو:</label> <input type="file" onchange="updateAsset('logo', this)">
+                    <label>صورة الواجهة:</label> <input type="file" onchange="updateAsset('heroImg', this)">
+                    <label>اللون الأساسي:</label> <input type="color" id="set-color" onchange="updateThemeColor(this.value)">
                 </div>
-                <div>
-                    <label>تغيير صورة الواجهة:</label>
-                    <input type="file" id="upload-hero" class="admin-input" accept="image/*" onchange="updateSiteAsset('hero')">
+                <div class="admin-col">
+                    <h4>روابط التواصل</h4>
+                    <input type="text" id="link-fb" class="admin-input" placeholder="رابط الفيسبوك">
+                    <input type="text" id="link-ig" class="admin-input" placeholder="رابط انستغرام">
+                    <input type="text" id="link-tt" class="admin-input" placeholder="رابط تيك توك">
+                    <button onclick="saveSocialLinks()" class="btn-buy" style="background:#2ecc71">حفظ الروابط</button>
                 </div>
             </div>
-            <hr style="margin:20px 0;">
+            <hr>
+            <h3>📦 إضافة منتج جديد</h3>
             <input type="text" id="p-name" class="admin-input" placeholder="اسم المنتج">
             <input type="number" id="p-price" class="admin-input" placeholder="السعر د.ج">
-            <label>صورة المنتج:</label>
-            <input type="file" id="p-img" class="admin-input" accept="image/*">
-            <button onclick="addNewProduct()" class="btn-buy" style="background:var(--primary)">حفظ المنتج في المتجر</button>
+            <input type="file" id="p-img" class="admin-input">
+            <button onclick="addNewProduct()" class="btn-buy">نشر المنتج</button>
         </div>
 
         <div class="products-grid" id="main-products"></div>
@@ -57,57 +62,35 @@
 
     <div id="checkout-sidebar" class="sidebar">
         <div class="checkout-card">
-            <button class="close-x" onclick="toggleSidebar('checkout-sidebar')">×</button>
-            
+            <button class="close-x" onclick="closeSidebar()">×</button>
             <div class="product-preview">
                 <img id="check-img" src="">
                 <h2 id="check-name">اسم المنتج</h2>
                 <div class="price-tag"><span id="check-price">0</span> د.ج</div>
-                
                 <div class="quantity-control">
                     <button onclick="changeQty(-1)">-</button>
                     <span id="qty-val">1</span>
                     <button onclick="changeQty(1)">+</button>
                 </div>
             </div>
-
             <div class="shipping-info">
-                <h4><i class="fas fa-truck"></i> معلومات التوصيل</h4>
                 <input type="text" id="cust-name" placeholder="الاسم واللقب">
                 <input type="tel" id="cust-phone" placeholder="رقم الهاتف">
-                
                 <select id="wilaya-select" onchange="calculateFinal()">
-                    <option value="0" data-home="0" data-office="0">-- اختر الولاية --</option>
-                    <option value="الجزائر" data-home="400" data-office="200">16 - الجزائر</option>
-                    <option value="وهران" data-home="600" data-office="400">31 - وهران</option>
-                    <option value="البليدة" data-home="400" data-office="300">09 - البليدة</option>
-                    <option value="قسنطينة" data-home="500" data-office="350">25 - قسنطينة</option>
-                    <option value="سطيف" data-home="500" data-office="350">19 - سطيف</option>
+                    <option value="0" data-home="0" data-office="0">-- اختر الولاية (58 ولاية) --</option>
                     </select>
-
                 <div class="delivery-options">
-                    <div class="dev-option active" id="opt-home" onclick="setDelivery('home')">
-                        <i class="fas fa-home"></i> التوصيل للمنزل
-                    </div>
-                    <div class="dev-option" id="opt-office" onclick="setDelivery('office')">
-                        <i class="fas fa-building"></i> التوصيل للمكتب
-                    </div>
+                    <div class="dev-option active" id="opt-home" onclick="setDelivery('home')">للمنزل</div>
+                    <div class="dev-option" id="opt-office" onclick="setDelivery('office')">للمكتب</div>
                 </div>
             </div>
-
             <div class="final-bill">
-                <div class="bill-line"><span>سعر المنتجات:</span> <span><span id="bill-sub">0</span> د.ج</span></div>
-                <div class="bill-line"><span>رسوم التوصيل:</span> <span><span id="bill-ship">0</span> د.ج</span></div>
-                <div class="bill-total"><span>المجموع الكلي:</span> <span><span id="bill-total">0</span> د.ج</span></div>
+                <div class="bill-line"><span>رسوم التوصيل:</span> <span id="bill-ship">0</span> د.ج</div>
+                <div class="bill-total"><span>المجموع الكلي:</span> <span id="bill-total">0</span> د.ج</div>
             </div>
-
-            <button class="confirm-btn" onclick="confirmOrder()">تأكيد الطلب الآن ✅</button>
+            <button class="confirm-btn" onclick="confirmOrder()">تأكيد الطلب عبر واتساب ✅</button>
         </div>
     </div>
-
-    <footer class="main-footer">
-        <p>© 2026 VEXO Store | جميع الحقوق محفوظة</p>
-    </footer>
 
     <script src="script.js"></script>
 </body>
