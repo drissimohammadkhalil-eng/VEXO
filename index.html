@@ -33,17 +33,18 @@
                 </div>
             </div>
             <div class="hero-image">
-                <img src="https://via.placeholder.com/500x400" id="hero-img-display">
+                <img src="https://via.placeholder.com/500x400?text=VEXO+PREMIUM" id="hero-img-display">
             </div>
         </div>
     </header>
 
     <div class="container">
         <div id="admin-panel" class="admin-section" style="display:none;">
-            <h3>إضافة منتج جديد</h3>
+            <h3>إضافة منتج جديد (رفع من الجهاز)</h3>
             <input type="text" id="p-name" class="admin-input" placeholder="اسم المنتج">
             <input type="number" id="p-price" class="admin-input" placeholder="السعر د.ج">
-            <input type="text" id="p-img" class="admin-input" placeholder="رابط صورة المنتج">
+            <label style="display:block; margin-top:10px; font-size:14px;">اختر صورة المنتج من كمبيوترك:</label>
+            <input type="file" id="p-img" class="admin-input" accept="image/*">
             <button onclick="addNewProduct()" class="btn-buy" style="background:var(--primary)">حفظ في المتجر</button>
         </div>
 
