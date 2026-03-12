@@ -11,7 +11,10 @@
 
     <nav class="navbar">
         <div class="container nav-flex">
-            <div class="logo">VEXO<span>Store</span></div>
+            <div class="logo" id="site-logo-container">
+                <span id="logo-text">VEXO<span>Store</span></span>
+            </div>
+            
             <div class="nav-icons">
                 <button onclick="loginAdmin()" class="admin-lock-btn"><i class="fas fa-lock"></i> الإدارة</button>
                 <div class="cart-icon" onclick="toggleSidebar('cart-sidebar')">
@@ -25,25 +28,37 @@
     <header class="hero-section">
         <div class="container hero-flex">
             <div class="hero-content">
-                <h1>اكتشف الفخامة مع <span>VEXO</span></h1>
-                <p>أفضل المنتجات بجودة استثنائية وتوصيل سريع إلى 58 ولاية جزائرية.</p>
+                <h1 id="hero-title">اكتشف الفخامة مع <span>VEXO</span></h1>
+                <p id="hero-desc">أفضل المنتجات بجودة استثنائية وتوصيل سريع إلى 58 ولاية جزائرية.</p>
                 <div class="hero-btns">
                     <a href="#main-products" class="btn-primary">تسوق الآن</a>
                     <a href="https://wa.me/213779310866" class="btn-outline">تواصل معنا</a>
                 </div>
             </div>
             <div class="hero-image">
-                <img src="https://via.placeholder.com/500x400?text=VEXO+PREMIUM" id="hero-img-display">
+                <img src="https://via.placeholder.com/500x400?text=VEXO+PREMIUM" id="main-hero-img">
             </div>
         </div>
     </header>
 
     <div class="container">
         <div id="admin-panel" class="admin-section" style="display:none;">
-            <h3>إضافة منتج جديد (رفع من الجهاز)</h3>
+            <h3 style="color:var(--primary); border-bottom:2px solid #eee; padding-bottom:10px;">إدارة الموقع العام</h3>
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px; margin-top:15px;">
+                <div>
+                    <label>تغيير اللوغو (Logo):</label>
+                    <input type="file" id="upload-logo" class="admin-input" accept="image/*" onchange="updateSiteAsset('logo')">
+                </div>
+                <div>
+                    <label>تغيير صورة الواجهة (Hero):</label>
+                    <input type="file" id="upload-hero" class="admin-input" accept="image/*" onchange="updateSiteAsset('hero')">
+                </div>
+            </div>
+
+            <h3 style="color:var(--primary); border-bottom:2px solid #eee; padding-bottom:10px; margin-top:30px;">إضافة منتج جديد</h3>
             <input type="text" id="p-name" class="admin-input" placeholder="اسم المنتج">
             <input type="number" id="p-price" class="admin-input" placeholder="السعر د.ج">
-            <label style="display:block; margin-top:10px; font-size:14px;">اختر صورة المنتج من كمبيوترك:</label>
+            <label>صورة المنتج:</label>
             <input type="file" id="p-img" class="admin-input" accept="image/*">
             <button onclick="addNewProduct()" class="btn-buy" style="background:var(--primary)">حفظ في المتجر</button>
         </div>
@@ -63,7 +78,6 @@
         <h3>بيانات التوصيل</h3><hr><br>
         <input type="text" id="cust-name" class="admin-input" placeholder="الاسم الكامل">
         <input type="tel" id="cust-phone" class="admin-input" placeholder="رقم الهاتف">
-        
         <label>الولاية:</label>
         <select id="wilaya-select" class="admin-input" onchange="calculateShipping()">
             <option value="0" data-price="0">-- اختر الولاية --</option>
@@ -126,22 +140,20 @@
             <option value="المغير" data-price="800">57 - المغير</option>
             <option value="المنيعة" data-price="800">58 - المنيعة</option>
         </select>
-
         <div class="shipping-box">
             <p>سعر التوصيل: <span id="shipping-cost">0</span> د.ج</p>
-            <p><strong>الإجمالي: <span id="final-total">0</span> د.ج</strong></p>
+            <p><strong>الإجمالي النهائي: <span id="final-total">0</span> د.ج</strong></p>
         </div>
-        
-        <button class="btn-buy whatsapp-btn" onclick="confirmOrder()">تأكيد عبر واتساب <i class="fab fa-whatsapp"></i></button>
-        <button class="btn-buy close-btn" onclick="toggleSidebar('checkout-sidebar')">رجوع</button>
+        <button class="btn-buy whatsapp-btn" onclick="confirmOrder()">تأكيد الطلب عبر واتساب <i class="fab fa-whatsapp"></i></button>
+        <button class="btn-buy close-btn" onclick="toggleSidebar('checkout-sidebar')">إغلاق</button>
     </div>
 
     <footer class="main-footer">
         <div class="container">
             <p>© 2026 VEXO Store | جميع الحقوق محفوظة</p>
             <div class="social-links">
-                <a href="https://wa.me/213779310866" target="_blank"><i class="fab fa-whatsapp"></i></a>
-                <a href="https://www.facebook.com/profile.php?id=61588568665394" target="_blank"><i class="fab fa-facebook"></i></a>
+                <a href="https://wa.me/213779310866"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://www.facebook.com/profile.php?id=61588568665394"><i class="fab fa-facebook"></i></a>
             </div>
         </div>
     </footer>
