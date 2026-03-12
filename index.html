@@ -3,198 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VEXO PRO | متجر الجزائر</title>
-    
+    <title>VEXO PRO | إدارة الطلبات</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-
     <style>
-        /* ستايل متكامل لضمان عدم حدوث تداخل */
-        :root { --main: #2563eb; --accent: #f97316; --bg: #f8fafc; --text: #1e293b; }
+        :root { --main: #2563eb; --orange: #f97316; --bg: #f8fafc; }
         * { box-sizing: border-box; font-family: 'Cairo', sans-serif; margin: 0; padding: 0; }
-        body { background: var(--bg); color: var(--text); direction: rtl; line-height: 1.6; }
+        body { background: var(--bg); color: #1e293b; direction: rtl; }
 
-        /* الهيدر */
-        .navbar { background: white; padding: 15px 5%; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
-        .logo { font-size: 26px; font-weight: 900; color: var(--main); text-decoration: none; }
-        .logo span { color: var(--text); }
+        /* Navbar */
+        .navbar { background: white; padding: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
+        .logo { font-size: 26px; font-weight: 900; color: var(--main); }
 
-        /* الواجهة الرئيسية */
+        /* Store */
         .container { max-width: 1100px; margin: auto; padding: 20px; }
-        .hero { text-align: center; padding: 50px 20px; background: white; border-radius: 25px; margin-bottom: 30px; border: 1px solid #e2e8f0; }
-        .hero h1 { font-size: 32px; margin-bottom: 10px; }
+        .hero { text-align: center; padding: 40px; background: white; border-radius: 20px; margin-bottom: 30px; border: 1px solid #e2e8f0; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .card { background: white; border-radius: 20px; padding: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid #f1f5f9; }
+        .card img { width: 100%; height: 230px; object-fit: cover; border-radius: 15px; }
+        .btn-order { background: var(--main); color: white; border: none; padding: 12px; border-radius: 12px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 10px; }
 
-        /* شبكة المنتجات */
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
-        .card { background: white; border-radius: 20px; padding: 20px; text-align: center; border: 1px solid #f1f5f9; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.02); position: relative; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        .card img { width: 100%; height: 260px; object-fit: cover; border-radius: 15px; background: #f1f5f9; }
-        .card h3 { margin: 15px 0 10px; font-size: 19px; }
-        .price-tag { color: var(--main); font-weight: 900; font-size: 24px; margin-bottom: 15px; }
-        .btn-order { background: var(--main); color: white; border: none; padding: 14px; border-radius: 12px; cursor: pointer; width: 100%; font-weight: bold; font-size: 16px; transition: 0.3s; }
-        .btn-order:hover { background: #1d4ed8; }
-
-        /* لوحة التحكم (مخفية تماماً) */
+        /* Admin UI */
         #admin-panel { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f1f5f9; z-index: 9999; overflow-y: auto; padding: 20px; }
-        .admin-content { max-width: 600px; margin: auto; background: white; padding: 30px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        .admin-input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; font-size: 16px; }
-        .admin-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #eee; }
-
-        /* نافذة الطلب (Modal) */
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 5000; align-items: center; justify-content: center; padding: 15px; }
-        .modal-body { background: white; width: 100%; max-width: 450px; border-radius: 25px; padding: 30px; animation: popUp 0.3s ease-out; }
-        @keyframes popUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
-        /* الزر السري (مفتاح الإدارة) */
-        #master-gate { position: fixed; bottom: 10px; left: 10px; width: 35px; height: 35px; background: rgba(0,0,0,0.05); color: #ccc; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; z-index: 8888; border: 1px solid #ddd; user-select: none; }
+        .admin-box { background: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; }
+        .order-card { background: #fff; padding: 15px; border-radius: 10px; margin-bottom: 10px; border-right: 5px solid var(--main); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        
+        /* Modal */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 5000; align-items: center; justify-content: center; }
+        .modal-content { background: white; width: 90%; max-width: 450px; border-radius: 25px; padding: 25px; text-align: center; }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; }
+        
+        #master-v { position: fixed; bottom: 10px; left: 10px; width: 30px; height: 30px; background: #ddd; color: #999; border-radius: 5px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 8888; opacity: 0.5; font-size: 12px; }
     </style>
 </head>
 <body>
 
     <div id="store-view">
-        <nav class="navbar">
-            <a href="#" class="logo">VEXO<span>PRO</span></a>
-            <div id="cart-info" style="font-weight: bold; color: var(--main);">📍 58 ولاية</div>
-        </nav>
-
+        <nav class="navbar"><div class="logo">VEXO<span>PRO</span></div></nav>
         <div class="container">
-            <div class="hero">
-                <h1>مرحباً بك في متجر VEXO الرسمي</h1>
-                <p>الجودة، الثقة، والتوصيل السريع إلى باب منزلك</p>
-            </div>
-
-            <div id="main-grid" class="products-grid">
-                </div>
+            <div class="hero"><h1>متجر VEXO الرسمي</h1><p>توصيل لـ 58 ولاية - دفع عند الاستلام</p></div>
+            <div id="main-list" class="products-grid"></div>
         </div>
     </div>
 
     <div id="order-modal" class="modal">
-        <div class="modal-body">
-            <h2 id="order-product-name" style="text-align:center; margin-bottom:20px;">تأكيد الطلبية</h2>
-            <input type="text" id="cust-name" class="admin-input" placeholder="الاسم واللقب بالكامل">
-            <input type="tel" id="cust-phone" class="admin-input" placeholder="رقم الهاتف">
-            <select id="cust-wilaya" class="admin-input">
-                <option value="الجزائر">الجزائر (400 دج)</option>
-                <option value="وهران">وهران (600 دج)</option>
-                <option value="سطيف">سطيف (500 دج)</option>
-                <option value="قسنطينة">قسنطينة (500 دج)</option>
-                <option value="عنابة">عنابة (600 دج)</option>
-            </select>
-            <button onclick="confirmWhatsApp()" class="btn-order" style="background:#22c55e; margin-top:15px; font-size:18px;">إرسال الطلب (WhatsApp) ✅</button>
-            <button onclick="closeModal()" style="width:100%; background:none; border:none; color:gray; margin-top:15px; cursor:pointer;">إلغاء</button>
+        <div class="modal-content" id="modal-body">
+            <h3 id="p-name-display">تأكيد الطلب</h3>
+            <input type="text" id="c-name" placeholder="الاسم الكامل">
+            <input type="tel" id="c-phone" placeholder="رقم الهاتف">
+            <select id="c-wilaya">
+                <option value="الجزائر">الجزائر</option><option value="وهران">وهران</option><option value="سطيف">سطيف</option>
+                </select>
+            <button onclick="submitOrder()" class="btn-order" style="background:#22c55e; font-size:18px;">تأكيد الطلب الآن ✅</button>
+            <button onclick="closeModal()" style="background:none; border:none; color:gray; margin-top:10px; cursor:pointer;">إلغاء</button>
         </div>
     </div>
 
     <div id="admin-panel">
-        <div class="admin-content">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
-                <h3>⚙️ إدارة المتجر</h3>
-                <button onclick="document.getElementById('admin-panel').style.display='none'" style="background:#ef4444; color:white; border:none; padding:8px 15px; border-radius:8px; cursor:pointer;">خروج</button>
-            </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2>⚙️ إدارة المتجر والطلبات</h2>
+            <button onclick="document.getElementById('admin-panel').style.display='none'" style="background:red; color:white; border:none; padding:10px; border-radius:8px;">خروج</button>
+        </div>
 
-            <div style="border: 1px solid #eee; padding: 20px; border-radius: 15px; margin-bottom: 25px;">
-                <h4>📦 إضافة منتج جديد</h4>
-                <input type="text" id="p-name" class="admin-input" placeholder="اسم المنتج">
-                <input type="number" id="p-price" class="admin-input" placeholder="السعر بالدينار">
-                <input type="file" id="p-img" class="admin-input">
-                <button onclick="saveProduct()" style="background:#22c55e; color:white; border:none; padding:15px; width:100%; border-radius:10px; font-weight:bold; cursor:pointer;">نشر المنتج الآن</button>
-            </div>
+        <div class="admin-box">
+            <h3>📥 الطلبات الواردة</h3>
+            <div id="orders-list"></div>
+        </div>
 
-            <h4>📝 المنتجات الحالية:</h4>
-            <div id="admin-list-container"></div>
+        <div class="admin-box">
+            <h3>➕ إضافة منتج</h3>
+            <input type="text" id="new-p-n" placeholder="اسم المنتج">
+            <input type="number" id="new-p-p" placeholder="السعر">
+            <input type="file" id="new-p-i">
+            <button onclick="addNewProduct()" style="background:green; color:white; border:none; padding:15px; width:100%; border-radius:10px; font-weight:bold;">نشر المنتج</button>
         </div>
     </div>
 
-    <div id="master-gate" onclick="unlockAdmin()">V</div>
+    <div id="master-v" onclick="openAdmin()">V</div>
 
     <script>
-        // قاعدة البيانات المحلية
-        let storeDb = JSON.parse(localStorage.getItem('vexo_master_v1')) || { products: [] };
+        let db = JSON.parse(localStorage.getItem('vexo_db_v12')) || { products: [], orders: [] };
         let activeP = null;
 
-        // وظيفة الدخول
-        function unlockAdmin() {
-            if(prompt("كلمة سر المسؤول:") === "1234") {
+        function openAdmin() {
+            if(prompt("كلمة السر:") === "1234") {
                 document.getElementById('admin-panel').style.display = 'block';
-                renderAdminList();
+                renderAdmin();
             }
         }
 
-        // إضافة منتج
-        function saveProduct() {
-            const name = document.getElementById('p-name').value;
-            const price = document.getElementById('p-price').value;
-            const file = document.getElementById('p-img').files[0];
-
-            if(name && price && file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    storeDb.products.push({ name, price, img: e.target.result });
-                    localStorage.setItem('vexo_master_v1', JSON.stringify(storeDb));
-                    location.reload(); // تحديث فوري وشامل لضمان ظهور المنتج
-                };
-                reader.readAsDataURL(file);
-            } else { alert("يرجى ملء جميع الخانات!"); }
-        }
-
-        // عرض المتجر
-        function displayStore() {
-            const grid = document.getElementById('main-grid');
-            if(storeDb.products.length === 0) {
-                grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; padding:50px; color:gray;">المتجر لا يحتوي على منتجات حالياً. ادخل للوحة التحكم للإضافة.</p>';
-                return;
-            }
-            grid.innerHTML = storeDb.products.map((p, i) => `
+        function renderStore() {
+            const list = document.getElementById('main-list');
+            list.innerHTML = db.products.map((p, i) => `
                 <div class="card">
-                    <img src="${p.img}" alt="${p.name}">
+                    <img src="${p.img}">
                     <h3>${p.name}</h3>
-                    <div class="price-tag">${p.price} د.ج</div>
-                    <button class="btn-order" onclick="openOrder(${i})">اطلب الآن</button>
+                    <div style="color:var(--main); font-weight:900; margin:10px 0;">${p.price} د.ج</div>
+                    <button class="btn-order" onclick="openModal(${i})">اطلب الآن</button>
                 </div>
             `).join('');
         }
 
-        // نظام الطلب
-        function openOrder(i) {
-            activeP = storeDb.products[i];
-            document.getElementById('order-product-name').innerText = activeP.name;
+        function openModal(i) {
+            activeP = db.products[i];
+            document.getElementById('p-name-display').innerText = activeP.name;
             document.getElementById('order-modal').style.display = 'flex';
         }
 
-        function confirmWhatsApp() {
-            const name = document.getElementById('cust-name').value;
-            const phone = document.getElementById('cust-phone').value;
-            const wilaya = document.getElementById('cust-wilaya').value;
+        function submitOrder() {
+            const name = document.getElementById('c-name').value;
+            const phone = document.getElementById('c-phone').value;
+            const wilaya = document.getElementById('c-wilaya').value;
 
-            if(!name || !phone) return alert("يرجى إدخال اسمك ورقم هاتفك");
+            if(!name || !phone) return alert("أكمل بياناتك");
 
-            const message = `طلب جديد من VEXO:\n----------------\n📦 المنتج: ${activeP.name}\n💰 السعر: ${activeP.price} دج\n👤 الزبون: ${name}\n📞 الهاتف: ${phone}\n📍 الولاية: ${wilaya}\n----------------\nيرجى تأكيد الطلبية معي.`;
-            window.location.href = `https://wa.me/213779310866?text=${encodeURIComponent(message)}`;
-        }
+            // حفظ الطلب في المصفوفة
+            db.orders.push({
+                product: activeP.name,
+                name: name,
+                phone: phone,
+                wilaya: wilaya,
+                time: new Date().toLocaleString('ar-DZ')
+            });
+            save();
 
-        function closeModal() { document.getElementById('order-modal').style.display = 'none'; }
-
-        // إدارة المنتجات
-        function renderAdminList() {
-            const list = document.getElementById('admin-list-container');
-            list.innerHTML = storeDb.products.map((p, i) => `
-                <div class="admin-item">
-                    <span>${p.name} (${p.price} دج)</span>
-                    <button onclick="deleteP(${i})" style="color:red; background:none; border:none; cursor:pointer;">حذف</button>
+            // إظهار رسالة النجاح للزبون دون تحويله
+            document.getElementById('modal-body').innerHTML = `
+                <div style="padding:20px;">
+                    <i class="fas fa-check-circle" style="font-size:50px; color:#22c55e;"></i>
+                    <h2 style="margin-top:15px;">تم استلام طلبك!</h2>
+                    <p>شكراً لك ${name}، سنتصل بك قريباً لتأكيد الشحن.</p>
+                    <button onclick="location.reload()" class="btn-order">العودة للمتجر</button>
                 </div>
-            `).join('');
+            `;
         }
 
-        function deleteP(i) {
-            if(confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
-                storeDb.products.splice(i, 1);
-                localStorage.setItem('vexo_master_v1', JSON.stringify(storeDb));
-                renderAdminList();
-                displayStore();
+        function renderAdmin() {
+            const oList = document.getElementById('orders-list');
+            oList.innerHTML = db.orders.length === 0 ? '<p>لا توجد طلبات بعد.</p>' : 
+            db.orders.map((o, i) => `
+                <div class="order-card">
+                    <strong>📦 المنتج: ${o.product}</strong><br>
+                    👤 الزبون: ${o.name} | 📞 ${o.phone}<br>
+                    📍 الولاية: ${o.wilaya} | 🕒 ${o.time}<br>
+                    <button onclick="deleteOrder(${i})" style="color:red; background:none; border:none; cursor:pointer; font-size:12px;">حذف الطلب</button>
+                </div>
+            `).reverse().join('');
+        }
+
+        function addNewProduct() {
+            const n = document.getElementById('new-p-n').value;
+            const p = document.getElementById('new-p-p').value;
+            const f = document.getElementById('new-p-i').files[0];
+            if(n && p && f) {
+                const r = new FileReader();
+                r.onload = (e) => {
+                    db.products.push({name:n, price:p, img:e.target.result});
+                    save(); location.reload();
+                };
+                r.readAsDataURL(f);
             }
         }
 
-        window.onload = displayStore;
+        function deleteOrder(i) { if(confirm("حذف الطلب؟")) { db.orders.splice(i,1); save(); renderAdmin(); } }
+        function closeModal() { document.getElementById('order-modal').style.display = 'none'; }
+        function save() { localStorage.setItem('vexo_db_v12', JSON.stringify(db)); }
+
+        window.onload = renderStore;
     </script>
 </body>
 </html>
