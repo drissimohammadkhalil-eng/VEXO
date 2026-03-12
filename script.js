@@ -1,63 +1,141 @@
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
+// 1. جلب البيانات والأصول المخزنة
+let products = JSON.parse(localStorage.getItem('vexo_products')) || [];
+let siteAssets = JSON.parse(localStorage.getItem('vexo_assets')) || {
+    logo: null,
+    hero: "https://via.placeholder.com/500x400?text=VEXO+PREMIUM"
+};
+let cart = [];
+let isAdmin = false;
 
-:root {
-    --primary: #2563eb;
-    --secondary: #0f172a;
-    --accent: #f97316;
-    --success: #22c55e;
-    --white: #ffffff;
-    --bg: #f8fafc;
+// 2. إدارة الأصول (لوغو وواجهة)
+function updateSiteAsset(type) {
+    const file = type === 'logo' ? document.getElementById('upload-logo').files[0] : document.getElementById('upload-hero').files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            siteAssets[type] = e.target.result;
+            localStorage.setItem('vexo_assets', JSON.stringify(siteAssets));
+            applyAssets();
+            alert("تم تحديث الموقع بنجاح!");
+        };
+        reader.readAsDataURL(file);
+    }
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; scroll-behavior: smooth; }
-body { background-color: var(--bg); color: var(--secondary); direction: rtl; }
-.container { max-width: 1200px; margin: auto; padding: 0 20px; }
-
-/* Navbar */
-.navbar { background: var(--white); padding: 15px 0; box-shadow: 0 4px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
-.nav-flex { display: flex; justify-content: space-between; align-items: center; }
-.logo { font-size: 28px; font-weight: 900; }
-.logo span { color: var(--primary); }
-.nav-icons { display: flex; gap: 20px; align-items: center; }
-.admin-lock-btn { border:none; background:none; cursor:pointer; font-size: 14px; color: #666; }
-
-/* Hero */
-.hero-section { background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); padding: 80px 0; }
-.hero-flex { display: flex; align-items: center; justify-content: space-between; gap: 40px; }
-.hero-content h1 { font-size: 45px; font-weight: 900; margin-bottom: 20px; }
-.hero-content h1 span { color: var(--primary); }
-.hero-content p { font-size: 18px; color: #64748b; margin-bottom: 30px; }
-.hero-btns { display: flex; gap: 15px; }
-.btn-primary { background: var(--primary); color: white; padding: 12px 30px; border-radius: 10px; text-decoration: none; font-weight: 700; }
-.btn-outline { border: 2px solid var(--secondary); color: var(--secondary); padding: 10px 30px; border-radius: 10px; text-decoration: none; font-weight: 700; }
-.hero-image img { width: 100%; max-width: 450px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-
-/* Products Grid */
-.products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; padding: 50px 0; }
-.product-card { background: var(--white); border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: 0.3s; text-align: center; border: 1px solid #eee; }
-.product-card:hover { transform: translateY(-10px); }
-.product-card img { width: 100%; height: 250px; object-fit: cover; }
-.product-info { padding: 20px; }
-.price { color: var(--primary); font-weight: 900; font-size: 22px; margin: 10px 0; display: block; }
-
-/* Sidebar */
-.sidebar { position: fixed; top: 0; left: -450px; width: 400px; height: 100%; background: var(--white); box-shadow: 10px 0 30px rgba(0,0,0,0.1); transition: 0.5s; z-index: 2000; padding: 30px; overflow-y: auto; }
-.sidebar.active { left: 0; }
-
-/* Buttons & Forms */
-.btn-buy { width: 100%; background: var(--secondary); color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 700; margin-top: 10px; display: block; }
-.whatsapp-btn { background: var(--success); }
-.close-btn { background: #94a3b8; }
-.admin-section { background: white; padding: 20px; border: 2px dashed var(--primary); border-radius: 15px; margin-bottom: 30px; }
-.admin-input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; }
-.shipping-box { background: #f0f7ff; padding: 15px; border-radius: 10px; margin-top: 15px; }
-
-/* Footer */
-.main-footer { background: var(--secondary); color: white; padding: 50px 0; text-align: center; margin-top: 50px; }
-.social-links { margin-top: 20px; display: flex; justify-content: center; gap: 20px; }
-.social-links a { color: white; font-size: 24px; }
-
-@media (max-width: 768px) {
-    .hero-flex { flex-direction: column; text-align: center; }
-    .sidebar { width: 100%; left: -100%; }
+function applyAssets() {
+    if (siteAssets.logo) {
+        document.getElementById('site-logo-container').innerHTML = `<img src="${siteAssets.logo}" alt="Logo">`;
+    }
+    if (siteAssets.hero) {
+        document.getElementById('main-hero-img').src = siteAssets.hero;
+    }
 }
+
+// 3. عرض المنتجات
+function renderProducts() {
+    const container = document.getElementById('main-products');
+    if(!container) return;
+    container.innerHTML = products.map((p, index) => `
+        <div class="product-card">
+            <img src="${p.img}" onerror="this.src='https://via.placeholder.com/400'">
+            <div class="product-info">
+                <h3>${p.name}</h3>
+                <span class="price">${p.price.toLocaleString()} د.ج</span>
+                <button class="btn-buy" onclick="addToCart('${p.name}', ${p.price})">إضافة للسلة</button>
+                ${isAdmin ? `<button class="btn-buy" style="background:#ef4444" onclick="deleteProduct(${index})">حذف المنتج</button>` : ''}
+            </div>
+        </div>
+    `).join('');
+}
+
+// 4. السلة والدفع
+function toggleSidebar(id) { document.getElementById(id).classList.toggle('active'); }
+
+function addToCart(name, price) {
+    cart.push({name, price});
+    document.getElementById('cart-count').innerText = cart.length;
+    updateCartUI();
+    toggleSidebar('cart-sidebar');
+}
+
+function updateCartUI() {
+    let total = cart.reduce((sum, i) => sum + i.price, 0);
+    document.getElementById('cart-total').innerText = total.toLocaleString();
+    document.getElementById('cart-items').innerHTML = cart.map((item, index) => `
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom:1px solid #eee; padding-bottom:5px;">
+            <span>${item.name}</span>
+            <b style="color:red; cursor:pointer;" onclick="removeItem(${index})">×</b>
+        </div>
+    `).join('');
+}
+
+function removeItem(index) {
+    cart.splice(index, 1);
+    updateCartUI();
+    document.getElementById('cart-count').innerText = cart.length;
+}
+
+function openCheckout() {
+    if(cart.length === 0) return alert("السلة فارغة");
+    toggleSidebar('cart-sidebar');
+    toggleSidebar('checkout-sidebar');
+    calculateShipping();
+}
+
+function calculateShipping() {
+    const select = document.getElementById('wilaya-select');
+    const ship = parseInt(select.options[select.selectedIndex].getAttribute('data-price')) || 0;
+    const sub = cart.reduce((sum, i) => sum + i.price, 0);
+    document.getElementById('shipping-cost').innerText = ship.toLocaleString();
+    document.getElementById('final-total').innerText = (sub + ship).toLocaleString();
+}
+
+function confirmOrder() {
+    const name = document.getElementById('cust-name').value;
+    const phone = document.getElementById('cust-phone').value;
+    const wilaya = document.getElementById('wilaya-select').value;
+    const total = document.getElementById('final-total').innerText;
+    if(!name || !phone || wilaya === "0") return alert("أكمل البيانات");
+    let msg = `*طلب جديد VEXO*\n\nالاسم: ${name}\nالهاتف: ${phone}\nالولاية: ${wilaya}\n\nالمنتجات:\n${cart.map(i => '- ' + i.name).join('\n')}\n\nالإجمالي: ${total} د.ج`;
+    window.open(`https://wa.me/213779310866?text=${encodeURIComponent(msg)}`);
+}
+
+// 5. الإدارة المتقدمة
+function loginAdmin() {
+    if(prompt("كلمة المرور:") === "1234") {
+        isAdmin = true;
+        document.getElementById('admin-panel').style.display = 'block';
+        renderProducts();
+    }
+}
+
+function addNewProduct() {
+    const name = document.getElementById('p-name').value;
+    const price = parseInt(document.getElementById('p-price').value);
+    const imgFile = document.getElementById('p-img').files[0];
+    if(name && price && imgFile) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            products.push({id: Date.now(), name, price, img: e.target.result});
+            localStorage.setItem('vexo_products', JSON.stringify(products));
+            renderProducts();
+            alert("تم إضافة المنتج!");
+            document.getElementById('p-name').value = "";
+            document.getElementById('p-price').value = "";
+        };
+        reader.readAsDataURL(imgFile);
+    }
+}
+
+function deleteProduct(index) {
+    if(confirm("حذف؟")) {
+        products.splice(index, 1);
+        localStorage.setItem('vexo_products', JSON.stringify(products));
+        renderProducts();
+    }
+}
+
+window.onload = function() {
+    renderProducts();
+    applyAssets();
+};
