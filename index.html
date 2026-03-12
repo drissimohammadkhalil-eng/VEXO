@@ -11,28 +11,18 @@
 
     <nav class="navbar">
         <div class="container nav-flex">
-            <div class="logo" id="site-logo-container">
-                <span id="logo-text">VEXO<span>Store</span></span>
-            </div>
-            
-            <div class="nav-icons">
-                <button onclick="loginAdmin()" class="admin-lock-btn"><i class="fas fa-lock"></i> الإدارة</button>
-                <div class="cart-icon" onclick="toggleSidebar('cart-sidebar')">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span id="cart-count">0</span>
-                </div>
-            </div>
+            <div class="logo" id="site-logo-container">VEXO<span>Store</span></div>
+            <button onclick="loginAdmin()" class="admin-lock-btn"><i class="fas fa-lock"></i> الإدارة</button>
         </div>
     </nav>
 
-    <header class="hero-section">
+    <header class="hero-section" id="hero-area">
         <div class="container hero-flex">
             <div class="hero-content">
-                <h1 id="hero-title">اكتشف الفخامة مع <span>VEXO</span></h1>
-                <p id="hero-desc">أفضل المنتجات بجودة استثنائية وتوصيل سريع إلى 58 ولاية جزائرية.</p>
+                <h1>اكتشف الفخامة مع <span>VEXO</span></h1>
+                <p>توصيل سريع لكافة الولايات الجزائرية وضمان الجودة على كل منتج.</p>
                 <div class="hero-btns">
                     <a href="#main-products" class="btn-primary">تسوق الآن</a>
-                    <a href="https://wa.me/213779310866" class="btn-outline">تواصل معنا</a>
                 </div>
             </div>
             <div class="hero-image">
@@ -43,119 +33,80 @@
 
     <div class="container">
         <div id="admin-panel" class="admin-section" style="display:none;">
-            <h3 style="color:var(--primary); border-bottom:2px solid #eee; padding-bottom:10px;">إدارة الموقع العام</h3>
+            <h3 style="color:var(--primary); border-bottom:2px solid #eee; padding-bottom:10px;">إدارة الموقع والمنتجات</h3>
             <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px; margin-top:15px;">
                 <div>
-                    <label>تغيير اللوغو (Logo):</label>
+                    <label>تغيير اللوغو:</label>
                     <input type="file" id="upload-logo" class="admin-input" accept="image/*" onchange="updateSiteAsset('logo')">
                 </div>
                 <div>
-                    <label>تغيير صورة الواجهة (Hero):</label>
+                    <label>تغيير صورة الواجهة:</label>
                     <input type="file" id="upload-hero" class="admin-input" accept="image/*" onchange="updateSiteAsset('hero')">
                 </div>
             </div>
-
-            <h3 style="color:var(--primary); border-bottom:2px solid #eee; padding-bottom:10px; margin-top:30px;">إضافة منتج جديد</h3>
+            <hr style="margin:20px 0;">
             <input type="text" id="p-name" class="admin-input" placeholder="اسم المنتج">
             <input type="number" id="p-price" class="admin-input" placeholder="السعر د.ج">
             <label>صورة المنتج:</label>
             <input type="file" id="p-img" class="admin-input" accept="image/*">
-            <button onclick="addNewProduct()" class="btn-buy" style="background:var(--primary)">حفظ في المتجر</button>
+            <button onclick="addNewProduct()" class="btn-buy" style="background:var(--primary)">حفظ المنتج في المتجر</button>
         </div>
 
         <div class="products-grid" id="main-products"></div>
     </div>
 
-    <div id="cart-sidebar" class="sidebar">
-        <h3>سلة المشتريات</h3><hr><br>
-        <div id="cart-items"></div>
-        <p class="total-text">مجموع السلع: <span id="cart-total">0</span> د.ج</p>
-        <button class="btn-buy" style="background:var(--primary)" onclick="openCheckout()">إتمام الطلب</button>
-        <button class="btn-buy close-btn" onclick="toggleSidebar('cart-sidebar')">إغلاق</button>
-    </div>
-
     <div id="checkout-sidebar" class="sidebar">
-        <h3>بيانات التوصيل</h3><hr><br>
-        <input type="text" id="cust-name" class="admin-input" placeholder="الاسم الكامل">
-        <input type="tel" id="cust-phone" class="admin-input" placeholder="رقم الهاتف">
-        <label>الولاية:</label>
-        <select id="wilaya-select" class="admin-input" onchange="calculateShipping()">
-            <option value="0" data-price="0">-- اختر الولاية --</option>
-            <option value="أدرار" data-price="800">01 - أدرار</option>
-            <option value="الشلف" data-price="600">02 - الشلف</option>
-            <option value="الأغواط" data-price="600">03 - الأغواط</option>
-            <option value="أم البواقي" data-price="500">04 - أم البواقي</option>
-            <option value="باتنة" data-price="500">05 - باتنة</option>
-            <option value="بجاية" data-price="500">06 - بجاية</option>
-            <option value="بسكرة" data-price="600">07 - بسكرة</option>
-            <option value="بشار" data-price="800">08 - بشار</option>
-            <option value="البليدة" data-price="400">09 - البليدة</option>
-            <option value="البويرة" data-price="400">10 - البويرة</option>
-            <option value="تمنراست" data-price="1000">11 - تمنراست</option>
-            <option value="تبسة" data-price="600">12 - تبسة</option>
-            <option value="تلمسان" data-price="600">13 - تلمسان</option>
-            <option value="تيارت" data-price="600">14 - تيارت</option>
-            <option value="تيزي وزو" data-price="500">15 - تيزي وزو</option>
-            <option value="الجزائر" data-price="400">16 - الجزائر</option>
-            <option value="الجلفة" data-price="600">17 - الجلفة</option>
-            <option value="جيجل" data-price="500">18 - جيجل</option>
-            <option value="سطيف" data-price="500">19 - سطيف</option>
-            <option value="سعيدة" data-price="600">20 - سعيدة</option>
-            <option value="سكيكدة" data-price="500">21 - سكيكدة</option>
-            <option value="سيدي بلعباس" data-price="600">22 - سيدي بلعباس</option>
-            <option value="عنابة" data-price="500">23 - عنابة</option>
-            <option value="قالمة" data-price="500">24 - قالمة</option>
-            <option value="قسنطينة" data-price="500">25 - قسنطينة</option>
-            <option value="المدية" data-price="400">26 - المدية</option>
-            <option value="مستغانم" data-price="600">27 - مستغانم</option>
-            <option value="المسيلة" data-price="500">28 - المسيلة</option>
-            <option value="معسكر" data-price="600">29 - معسكر</option>
-            <option value="ورقلة" data-price="700">30 - ورقلة</option>
-            <option value="وهران" data-price="600">31 - وهران</option>
-            <option value="البيض" data-price="700">32 - البيض</option>
-            <option value="إليزي" data-price="1000">33 - إليزي</option>
-            <option value="برج بوعريريج" data-price="500">34 - برج بوعريريج</option>
-            <option value="بومرداس" data-price="400">35 - بومرداس</option>
-            <option value="الطارف" data-price="600">36 - الطارف</option>
-            <option value="تندوف" data-price="1200">37 - تندوف</option>
-            <option value="تيسمسيلت" data-price="600">38 - تيسمسيلت</option>
-            <option value="الوادي" data-price="700">39 - الوادي</option>
-            <option value="خنشلة" data-price="600">40 - خنشلة</option>
-            <option value="سوق أهراس" data-price="600">41 - سوق أهراس</option>
-            <option value="تيبازة" data-price="400">42 - تيبازة</option>
-            <option value="ميلة" data-price="500">43 - ميلة</option>
-            <option value="عين الدفلى" data-price="500">44 - عين الدفلى</option>
-            <option value="النعامة" data-price="700">45 - النعامة</option>
-            <option value="عين تموشنت" data-price="600">46 - عين تموشنت</option>
-            <option value="غرداية" data-price="700">47 - غرداية</option>
-            <option value="غليزان" data-price="600">48 - غليزان</option>
-            <option value="تيميمون" data-price="900">49 - تيميمون</option>
-            <option value="برج باجي مختار" data-price="1500">50 - برج باجي مختار</option>
-            <option value="أولاد جلال" data-price="700">51 - أولاد جلال</option>
-            <option value="بني عباس" data-price="900">52 - بني عباس</option>
-            <option value="عين صالح" data-price="1000">53 - عين صالح</option>
-            <option value="عين قزام" data-price="1500">54 - عين قزام</option>
-            <option value="تقرت" data-price="800">55 - تقرت</option>
-            <option value="جانت" data-price="1500">56 - جانت</option>
-            <option value="المغير" data-price="800">57 - المغير</option>
-            <option value="المنيعة" data-price="800">58 - المنيعة</option>
-        </select>
-        <div class="shipping-box">
-            <p>سعر التوصيل: <span id="shipping-cost">0</span> د.ج</p>
-            <p><strong>الإجمالي النهائي: <span id="final-total">0</span> د.ج</strong></p>
+        <div class="checkout-card">
+            <button class="close-x" onclick="toggleSidebar('checkout-sidebar')">×</button>
+            
+            <div class="product-preview">
+                <img id="check-img" src="">
+                <h2 id="check-name">اسم المنتج</h2>
+                <div class="price-tag"><span id="check-price">0</span> د.ج</div>
+                
+                <div class="quantity-control">
+                    <button onclick="changeQty(-1)">-</button>
+                    <span id="qty-val">1</span>
+                    <button onclick="changeQty(1)">+</button>
+                </div>
+            </div>
+
+            <div class="shipping-info">
+                <h4><i class="fas fa-truck"></i> معلومات التوصيل</h4>
+                <input type="text" id="cust-name" placeholder="الاسم واللقب">
+                <input type="tel" id="cust-phone" placeholder="رقم الهاتف">
+                
+                <select id="wilaya-select" onchange="calculateFinal()">
+                    <option value="0" data-home="0" data-office="0">-- اختر الولاية --</option>
+                    <option value="الجزائر" data-home="400" data-office="200">16 - الجزائر</option>
+                    <option value="وهران" data-home="600" data-office="400">31 - وهران</option>
+                    <option value="البليدة" data-home="400" data-office="300">09 - البليدة</option>
+                    <option value="قسنطينة" data-home="500" data-office="350">25 - قسنطينة</option>
+                    <option value="سطيف" data-home="500" data-office="350">19 - سطيف</option>
+                    </select>
+
+                <div class="delivery-options">
+                    <div class="dev-option active" id="opt-home" onclick="setDelivery('home')">
+                        <i class="fas fa-home"></i> التوصيل للمنزل
+                    </div>
+                    <div class="dev-option" id="opt-office" onclick="setDelivery('office')">
+                        <i class="fas fa-building"></i> التوصيل للمكتب
+                    </div>
+                </div>
+            </div>
+
+            <div class="final-bill">
+                <div class="bill-line"><span>سعر المنتجات:</span> <span><span id="bill-sub">0</span> د.ج</span></div>
+                <div class="bill-line"><span>رسوم التوصيل:</span> <span><span id="bill-ship">0</span> د.ج</span></div>
+                <div class="bill-total"><span>المجموع الكلي:</span> <span><span id="bill-total">0</span> د.ج</span></div>
+            </div>
+
+            <button class="confirm-btn" onclick="confirmOrder()">تأكيد الطلب الآن ✅</button>
         </div>
-        <button class="btn-buy whatsapp-btn" onclick="confirmOrder()">تأكيد الطلب عبر واتساب <i class="fab fa-whatsapp"></i></button>
-        <button class="btn-buy close-btn" onclick="toggleSidebar('checkout-sidebar')">إغلاق</button>
     </div>
 
     <footer class="main-footer">
-        <div class="container">
-            <p>© 2026 VEXO Store | جميع الحقوق محفوظة</p>
-            <div class="social-links">
-                <a href="https://wa.me/213779310866"><i class="fab fa-whatsapp"></i></a>
-                <a href="https://www.facebook.com/profile.php?id=61588568665394"><i class="fab fa-facebook"></i></a>
-            </div>
-        </div>
+        <p>© 2026 VEXO Store | جميع الحقوق محفوظة</p>
     </footer>
 
     <script src="script.js"></script>
