@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VEXO | المتجر الاحترافي</title>
+    <title>VEXO | المتجر المتكامل</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -31,8 +31,7 @@
             <button onclick="addNewProduct()" class="btn-buy" style="background:var(--primary)">حفظ المنتج</button>
         </div>
 
-        <div class="products-grid" id="main-products">
-            </div>
+        <div class="products-grid" id="main-products"></div>
     </div>
 
     <div id="cart-sidebar" class="sidebar">
@@ -44,16 +43,71 @@
     </div>
 
     <div id="checkout-sidebar" class="sidebar">
-        <h3>معلومات التوصيل</h3><hr><br>
+        <h3>بيانات الشحن</h3><hr><br>
         <input type="text" id="cust-name" class="admin-input" placeholder="الاسم الكامل">
         <input type="tel" id="cust-phone" class="admin-input" placeholder="رقم الهاتف">
         
         <label>الولاية:</label>
         <select id="wilaya-select" class="admin-input" onchange="calculateShipping()">
             <option value="0" data-price="0">-- اختر الولاية --</option>
-            <option value="الجزائر" data-price="400">01 - الجزائر (400 د.ج)</option>
-            <option value="البليدة" data-price="400">09 - البليدة (400 د.ج)</option>
-            <option value="وهران" data-price="600">31 - وهران (600 د.ج)</option>
+            <option value="أدرار" data-price="800">01 - أدرار</option>
+            <option value="الشلف" data-price="600">02 - الشلف</option>
+            <option value="الأغواط" data-price="600">03 - الأغواط</option>
+            <option value="أم البواقي" data-price="500">04 - أم البواقي</option>
+            <option value="باتنة" data-price="500">05 - باتنة</option>
+            <option value="بجاية" data-price="500">06 - بجاية</option>
+            <option value="بسكرة" data-price="600">07 - بسكرة</option>
+            <option value="بشار" data-price="800">08 - بشار</option>
+            <option value="البليدة" data-price="400">09 - البليدة</option>
+            <option value="البويرة" data-price="400">10 - البويرة</option>
+            <option value="تمنراست" data-price="1000">11 - تمنراست</option>
+            <option value="تبسة" data-price="600">12 - تبسة</option>
+            <option value="تلمسان" data-price="600">13 - تلمسان</option>
+            <option value="تيارت" data-price="600">14 - تيارت</option>
+            <option value="تيزي وزو" data-price="500">15 - تيزي وزو</option>
+            <option value="الجزائر" data-price="400">16 - الجزائر العاصمة</option>
+            <option value="الجلفة" data-price="600">17 - الجلفة</option>
+            <option value="جيجل" data-price="500">18 - جيجل</option>
+            <option value="سطيف" data-price="500">19 - سطيف</option>
+            <option value="سعيدة" data-price="600">20 - سعيدة</option>
+            <option value="سكيكدة" data-price="500">21 - سكيكدة</option>
+            <option value="سيدي بلعباس" data-price="600">22 - سيدي بلعباس</option>
+            <option value="عنابة" data-price="500">23 - عنابة</option>
+            <option value="قالمة" data-price="500">24 - قالمة</option>
+            <option value="قسنطينة" data-price="500">25 - قسنطينة</option>
+            <option value="المدية" data-price="400">26 - المدية</option>
+            <option value="مستغانم" data-price="600">27 - مستغانم</option>
+            <option value="المسيلة" data-price="500">28 - المسيلة</option>
+            <option value="معسكر" data-price="600">29 - معسكر</option>
+            <option value="ورقلة" data-price="700">30 - ورقلة</option>
+            <option value="وهران" data-price="600">31 - وهران</option>
+            <option value="البيض" data-price="700">32 - البيض</option>
+            <option value="إليزي" data-price="1000">33 - إليزي</option>
+            <option value="برج بوعريريج" data-price="500">34 - برج بوعريريج</option>
+            <option value="بومرداس" data-price="400">35 - بومرداس</option>
+            <option value="الطارف" data-price="600">36 - الطارف</option>
+            <option value="تندوف" data-price="1200">37 - تندوف</option>
+            <option value="تيسمسيلت" data-price="600">38 - تيسمسيلت</option>
+            <option value="الوادي" data-price="700">39 - الوادي</option>
+            <option value="خنشلة" data-price="600">40 - خنشلة</option>
+            <option value="سوق أهراس" data-price="600">41 - سوق أهراس</option>
+            <option value="تيبازة" data-price="400">42 - تيبازة</option>
+            <option value="ميلة" data-price="500">43 - ميلة</option>
+            <option value="عين الدفلى" data-price="500">44 - عين الدفلى</option>
+            <option value="النعامة" data-price="700">45 - النعامة</option>
+            <option value="عين تموشنت" data-price="600">46 - عين تموشنت</option>
+            <option value="غرداية" data-price="700">47 - غرداية</option>
+            <option value="غليزان" data-price="600">48 - غليزان</option>
+            <option value="تيميمون" data-price="900">49 - تيميمون</option>
+            <option value="برج باجي مختار" data-price="1500">50 - برج باجي مختار</option>
+            <option value="أولاد جلال" data-price="700">51 - أولاد جلال</option>
+            <option value="بني عباس" data-price="900">52 - بني عباس</option>
+            <option value="عين صالح" data-price="1000">53 - عين صالح</option>
+            <option value="عين قزام" data-price="1500">54 - عين قزام</option>
+            <option value="تقرت" data-price="800">55 - تقرت</option>
+            <option value="جانت" data-price="1500">56 - جانت</option>
+            <option value="المغير" data-price="800">57 - المغير</option>
+            <option value="المنيعة" data-price="800">58 - المنيعة</option>
         </select>
 
         <div class="shipping-box">
