@@ -1,66 +1,92 @@
-// قائمة الولايات بأسعار شحن مقترحة (يمكنك تعديل الأسعار لاحقاً من الكود)
-const wilayas = [
-    {n: "1- أدرار", h: 1000, o: 800}, {n: "2- الشلف", h: 600, o: 400}, {n: "6- بجاية", h: 600, o: 400},
-    {n: "9- البليدة", h: 400, o: 200}, {n: "16- الجزائر", h: 400, o: 200}, {n: "19- سطيف", h: 500, o: 300},
-    {n: "31- وهران", h: 600, o: 400}, {n: "58- المنيعة", h: 1200, o: 900} 
-    // ... القائمة تدعم الـ 58 ولاية، سأضع لك أهمها لسهولة النسخ
-];
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VEXO | Premium Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-let products = JSON.parse(localStorage.getItem('vexo_products')) || [];
-let siteData = JSON.parse(localStorage.getItem('vexo_config')) || {
-    logo: null, heroImg: null, title: "اكتشف الفخامة مع VEXO", color: "#2563eb",
-    fb: "", ig: "", tt: ""
-};
+    <nav class="navbar">
+        <div class="container nav-flex">
+            <div class="logo" id="site-logo-container">VEXO<span>Store</span></div>
+            <div id="admin-indicator" style="width:5px; height:5px; background:transparent;"></div>
+        </div>
+    </nav>
 
-// الدخول السري: اضغط على حرف "L" في لوحة المفاتيح لتظهر خانة كلمة السر
-window.addEventListener('keydown', (e) => {
-    if (e.key.toLowerCase() === 'l') { loginAdmin(); }
-});
+    <header class="hero-section">
+        <div class="container hero-flex">
+            <div class="hero-content">
+                <h1 id="hero-title">اكتشف الفخامة مع <span>VEXO</span></h1>
+                <p id="hero-desc">أفضل جودة، توصيل سريع لـ 58 ولاية، ودفع عند الاستلام.</p>
+                <div class="social-links" id="social-container"></div>
+            </div>
+            <div class="hero-image">
+                <img src="https://via.placeholder.com/500x400" id="main-hero-img">
+            </div>
+        </div>
+    </header>
 
-function loginAdmin() {
-    if(prompt("كلمة مرور الإدارة:") === "1234") {
-        isAdmin = true;
-        document.getElementById('admin-panel').style.display = 'block';
-        renderProducts();
-        alert("مرحباً بك في لوحة التحكم");
-    }
-}
+    <div class="container">
+        <div id="admin-panel" class="admin-section" style="display:none;">
+            <h3>⚙️ إعدادات المتجر</h3>
+            <div class="admin-grid">
+                <div class="admin-col">
+                    <label>اللوغو:</label><input type="file" onchange="updateAsset('logo', this)">
+                    <label>الواجهة:</label><input type="file" onchange="updateAsset('heroImg', this)">
+                    <label>لون الهوية:</label><input type="color" id="set-color" onchange="updateThemeColor(this.value)">
+                </div>
+                <div class="admin-col">
+                    <input type="text" id="set-fb" class="admin-input" placeholder="رابط فيسبوك">
+                    <input type="text" id="set-ig" class="admin-input" placeholder="رابط انستغرام">
+                    <button onclick="saveAdminSettings()" class="btn-buy" style="background:#2ecc71">حفظ الإعدادات</button>
+                </div>
+            </div>
+            <hr>
+            <h3>📦 إضافة منتج</h3>
+            <input type="text" id="p-name" class="admin-input" placeholder="اسم المنتج">
+            <input type="number" id="p-price" class="admin-input" placeholder="السعر د.ج">
+            <input type="file" id="p-img" class="admin-input">
+            <button onclick="addNewProduct()" class="btn-buy">نشر المنتج</button>
+        </div>
 
-function fillWilayas() {
-    const select = document.getElementById('wilaya-select');
-    wilayas.forEach(w => {
-        let opt = document.createElement('option');
-        opt.value = w.n;
-        opt.dataset.home = w.h;
-        opt.dataset.office = w.o;
-        opt.innerText = w.n;
-        select.appendChild(opt);
-    });
-}
+        <div class="products-grid" id="main-products"></div>
+    </div>
 
-function saveSocialLinks() {
-    siteData.fb = document.getElementById('link-fb').value;
-    siteData.ig = document.getElementById('link-ig').value;
-    siteData.tt = document.getElementById('link-tt').value;
-    localStorage.setItem('vexo_config', JSON.stringify(siteData));
-    renderSocial();
-}
+    <div id="checkout-sidebar" class="sidebar">
+        <div class="checkout-card">
+            <button class="close-x" onclick="closeSidebar()">×</button>
+            <div class="product-preview">
+                <img id="check-img" src="">
+                <h2 id="check-name"></h2>
+                <div class="price-tag"><span id="check-price"></span> د.ج</div>
+                <div class="quantity-control">
+                    <button onclick="changeQty(-1)">-</button>
+                    <span id="qty-val">1</span>
+                    <button onclick="changeQty(1)">+</button>
+                </div>
+            </div>
+            <div class="shipping-info">
+                <input type="text" id="cust-name" placeholder="الاسم الكامل">
+                <input type="tel" id="cust-phone" placeholder="رقم الهاتف">
+                <select id="wilaya-select" onchange="calculateFinal()">
+                    <option value="0" data-home="0" data-office="0">-- اختر الولاية --</option>
+                </select>
+                <div class="delivery-options">
+                    <div class="dev-option active" id="opt-home" onclick="setDelivery('home')">للمنزل</div>
+                    <div class="dev-option" id="opt-office" onclick="setDelivery('office')">للمكتب</div>
+                </div>
+            </div>
+            <div class="final-bill">
+                <div class="bill-line"><span>التوصيل:</span> <span id="bill-ship">0</span> د.ج</div>
+                <div class="bill-total"><span>الإجمالي:</span> <span id="bill-total">0</span> د.ج</div>
+            </div>
+            <button class="confirm-btn" onclick="confirmOrder()">تأكيد الطلب عبر واتساب</button>
+        </div>
+    </div>
 
-function renderSocial() {
-    const container = document.getElementById('social-container');
-    container.innerHTML = `
-        ${siteData.fb ? `<a href="${siteData.fb}" target="_blank"><i class="fab fa-facebook"></i></a>` : ''}
-        ${siteData.ig ? `<a href="${siteData.ig}" target="_blank"><i class="fab fa-instagram"></i></a>` : ''}
-        ${siteData.tt ? `<a href="${siteData.tt}" target="_blank"><i class="fab fa-tiktok"></i></a>` : ''}
-    `;
-}
-
-// باقي وظائف الحساب والرفع والمنتجات (تتبع نفس منطق الكود السابق المحسن)
-// ... (تأكد من نسخ وظائف addNewProduct و calculateFinal من الرد السابق)
-
-window.onload = () => { 
-    applySettings(); 
-    renderProducts(); 
-    fillWilayas(); 
-    renderSocial(); 
-};
+    <script src="script.js"></script>
+</body>
+</html>
